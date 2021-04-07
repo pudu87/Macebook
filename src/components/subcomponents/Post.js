@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { API_URL } from '../../Constants'
+import { getFullName } from '../logic/Helpers'
 import Comment from './Comment'
 import NewComment from './NewComment'
 
@@ -18,8 +19,8 @@ function Post(props) {
       }
     }
     const response = await fetch(API_URL + path, requestOptions);
-    const result = await response.json();
-    setComments(result);
+    const newComments = await response.json();
+    setComments(newComments);
   }
 
   const commentList = comments.map(comment => {
@@ -28,8 +29,8 @@ function Post(props) {
 
   return (
     <article className="post">
-      <h4>UserId: {post.user_id}</h4>
-      <p>{post.id}:{post.content}</p>
+      <h4>{getFullName(post.profile)}</h4>
+      <p>{post.content}</p>
       <ul>
         <li>#Likes: {post.likes_count}</li>
         <li>#Comments: {post.comments_count}</li>

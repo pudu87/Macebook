@@ -21,7 +21,7 @@ function App() {
           <Route exact path='/'>
             <DashBoard/>
           </Route>
-          <Route path='/user'>
+          <Route path='/:user_id'>
             <User/>
           </Route>
         </Switch>

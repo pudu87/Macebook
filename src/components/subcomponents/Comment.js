@@ -1,10 +1,12 @@
+import { getFullName } from '../logic/Helpers'
+
 function Comment(props) {
 
   const comment = props.comment;
 
   return (
     <li className="comment">
-      <h5>UserId: {comment.user_id} PostId: {comment.post_id}</h5>
+      <h5>{getFullName(comment.profile)}</h5>
       <p>{comment.content}</p>
       <ul>
         <li>Date: {comment.created_at}</li>

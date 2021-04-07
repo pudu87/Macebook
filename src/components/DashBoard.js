@@ -20,8 +20,8 @@ function DashBoard() {
       }
     }
     const response = await fetch(API_URL + '/posts', requestOptions);
-    const result = await response.json();
-    setPosts(result);
+    const newPosts = await response.json();
+    setPosts(newPosts);
   }
 
   const postList = posts.map(post => {
