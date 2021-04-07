@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { API_URL } from '../../Constants'
 import NewPost from '../subcomponents/NewPost'
 import Post from '../subcomponents/Post'
@@ -8,11 +8,7 @@ function Messages(props) {
   const userId = props.userId;
   const [posts, setPosts] = useState([]);
 
-  useEffect(() => {
-    initPosts();
-  }, [])
-
-  async function initPosts() {
+  const initPosts = useCallback(async () => {
     const path = '/posts/' + userId;
     const requestOptions = {
       method: 'GET',
@@ -24,7 +20,11 @@ function Messages(props) {
     const response = await fetch(API_URL + path, requestOptions);
     const newPosts = await response.json();
     setPosts(newPosts);
-  }
+  }, [userId]);
+
+  useEffect(() => {
+    initPosts();
+  }, [initPosts]);
 
   const postList = posts.map(post => {
     return <Post key={post.id} post={post}/>

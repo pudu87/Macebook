@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { getFullName } from '../logic/Helpers'
 
 function Comment(props) {
@@ -6,7 +7,7 @@ function Comment(props) {
 
   return (
     <li className="comment">
-      <h5>{getFullName(comment.profile)}</h5>
+      <Link to={`/${comment.user_id}`}>{getFullName(comment.profile)}</Link>
       <p>{comment.content}</p>
       <ul>
         <li>Date: {comment.created_at}</li>

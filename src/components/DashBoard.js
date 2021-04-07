@@ -9,7 +9,7 @@ function DashBoard() {
 
   useEffect(() => {
     initPosts();
-  }, [])
+  }, []);
 
   async function initPosts() {
     const requestOptions = {

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { API_URL } from '../../Constants'
 import { getFullName } from '../logic/Helpers'
 import Comment from './Comment'
@@ -29,7 +30,7 @@ function Post(props) {
 
   return (
     <article className="post">
-      <h4>{getFullName(post.profile)}</h4>
+      <Link to={`/${post.user_id}`}>{getFullName(post.profile)}</Link>
       <p>{post.content}</p>
       <ul>
         <li>#Likes: {post.likes_count}</li>

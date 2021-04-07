@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Switch, Route, Link, useRouteMatch, useParams } from "react-router-dom"
 import { API_URL } from '../Constants'
 import Messages from './user/Messages'
@@ -11,15 +11,11 @@ function User() {
   path = path.replace(/\/$/, '');
   url = url.replace(/\/$/, '');
 
-  const { user_id } = useParams();
+  const { userId } = useParams();
   const [userName, setUserName] = useState('');
-  
-  useEffect(() => {
-    initUserName();
-  }, [])
 
-  async function initUserName() {
-    const path = '/users/' + user_id;
+  const initUserName = useCallback(async () => {
+    const path = '/users/' + userId;
     const requestOptions = {
       method: 'GET',
       headers: { 
@@ -30,7 +26,11 @@ function User() {
     const response = await fetch(API_URL + path, requestOptions);
     const name = await response.json();
     setUserName(name.first_name + ' ' + name.last_name)
-  }
+  }, [userId]);
+
+  useEffect(() => {
+    initUserName();
+  }, [initUserName]);
 
   return (
     <div id="user">
@@ -48,13 +48,13 @@ function User() {
       </ul>
       <Switch>
         <Route exact path={path} render={() => (
-          <Messages userId={user_id}/>
+          <Messages userId={userId}/>
         )}/>
         <Route exact path={`${path}/profile`} render={() => (
-          <Profile userId={user_id}/>
+          <Profile userId={userId}/>
         )}/>
         <Route exact path={`${path}/friends`} render={() => (
-          <Friends userId={user_id}/>
+          <Friends userId={userId}/>
         )}/>
       </Switch>
     </div>
