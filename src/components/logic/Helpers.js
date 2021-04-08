@@ -12,3 +12,9 @@ export function getNewPostRequestOptions(content) {
     body: JSON.stringify({ post: { content: content } })
   }
 }
+
+export function transformKey(key) {
+  return key.split('_')
+            .map(w => w[0].toUpperCase() + w.slice(1))
+            .join(' ');
+}

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Switch, Route, Link, useRouteMatch, useParams } from "react-router-dom"
 import { API_URL } from '../Constants'
+import isEqual from 'lodash/isEqual'
 import Messages from './user/Messages'
 import Profile from './user/Profile'
 import Friends from './user/Friends'
@@ -12,9 +13,9 @@ function User() {
   url = url.replace(/\/$/, '');
 
   const { userId } = useParams();
-  const [userName, setUserName] = useState('');
+  const [header, setHeader] = useState('');
 
-  const initUserName = useCallback(async () => {
+  const initHeader = useCallback(async () => {
     const path = '/users/' + userId;
     const requestOptions = {
       method: 'GET',
@@ -24,17 +25,25 @@ function User() {
       }
     }
     const response = await fetch(API_URL + path, requestOptions);
-    const name = await response.json();
-    setUserName(name.first_name + ' ' + name.last_name)
+    const newHeader = await response.json();
+    setHeader(newHeader);
   }, [userId]);
 
   useEffect(() => {
-    initUserName();
-  }, [initUserName]);
+    initHeader();
+  }, [initHeader]);
+
+  function updateHeader(newHeader) {
+    if (!isEqual(header, newHeader)) { setHeader(newHeader) }
+  }
+
+  function getUserName() {
+    return header.first_name + ' ' + header.last_name;
+  }
 
   return (
     <div id="user">
-      {userName}
+      {getUserName()}
       <ul>
         <li>
           <Link to={`${url}/`}>Messages</Link>
@@ -51,7 +60,7 @@ function User() {
           <Messages userId={userId}/>
         )}/>
         <Route exact path={`${path}/profile`} render={() => (
-          <Profile userId={userId}/>
+          <Profile userId={userId} onProfileUpdate={updateHeader}/>
         )}/>
         <Route exact path={`${path}/friends`} render={() => (
           <Friends userId={userId}/>
