@@ -24,6 +24,25 @@ function Post(props) {
     setComments(newComments);
   }
 
+  async function handleNewComment(content) {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('token')
+      },
+      body: JSON.stringify({ 
+        comment: { 
+          content: content,
+          post_id: post.id
+        } 
+      })
+    }
+    const response = await fetch(API_URL + '/comments', requestOptions);
+    const newComment = await response.json();
+    setComments([...comments, newComment]);
+  }
+
   const commentList = comments.map(comment => {
     return <Comment key={comment.id} comment={comment}/>
   });
@@ -39,7 +58,7 @@ function Post(props) {
       </ul>
       <button onClick={showComments}>ShowComments</button>
       <ul>{commentList}</ul>
-      <NewComment/>
+      <NewComment handleNewComment={handleNewComment}/>
     </article>
   );
 }
