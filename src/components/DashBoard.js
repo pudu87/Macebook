@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { getNewPostRequestOptions } from './logic/Helpers'
 import { API_URL } from '../Constants'
 import NewPost from './subcomponents/NewPost'
 import Post from './subcomponents/Post'
@@ -24,6 +25,13 @@ function DashBoard() {
     setPosts(newPosts);
   }
 
+  async function handleNewPost(content) {
+    const requestOptions = getNewPostRequestOptions(content)
+    const response = await fetch(API_URL + '/posts', requestOptions);
+    const newPost = await response.json();
+    setPosts([newPost, ...posts]);
+  }
+
   const postList = posts.map(post => {
     return <Post key={post.id} post={post}/>
   });
@@ -31,7 +39,7 @@ function DashBoard() {
   return (
     <div id="dashboard">
       DashBoard
-      <NewPost/>
+      <NewPost handleNewPost={handleNewPost}/>
       {postList}
     </div>
   );
