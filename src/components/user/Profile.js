@@ -43,8 +43,10 @@ function Profile(props) {
     setProfile(newProfile);
     changeView();
     const header = {
-      first_name: newProfile.first_name,
-      last_name: newProfile.last_name,
+      profile: {
+        first_name: newProfile.first_name,
+        last_name: newProfile.last_name,
+      }
     };
     props.onProfileUpdate(header);
   }

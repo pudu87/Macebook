@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Switch, Route, Link, useRouteMatch, useParams } from "react-router-dom"
 import { API_URL } from '../Constants'
+import { getFullName } from "./logic/Helpers";
 import isEqual from 'lodash/isEqual'
 import Messages from './user/Messages'
 import Profile from './user/Profile'
@@ -13,7 +14,9 @@ function User() {
   url = url.replace(/\/$/, '');
 
   const { userId } = useParams();
-  const [header, setHeader] = useState('');
+  const [header, setHeader] = useState({
+    profile: {first_name: '', last_name: ''}
+  });
 
   const initHeader = useCallback(async () => {
     const path = '/users/' + userId;
@@ -37,13 +40,9 @@ function User() {
     if (!isEqual(header, newHeader)) { setHeader(newHeader) }
   }
 
-  function getUserName() {
-    return header.first_name + ' ' + header.last_name;
-  }
-
   return (
     <div id="user">
-      {getUserName()}
+      {getFullName(header.profile)}
       <ul>
         <li>
           <Link to={`${url}/`}>Messages</Link>
