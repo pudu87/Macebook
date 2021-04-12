@@ -3,7 +3,7 @@ import { getFullName } from "../logic/Helpers";
 
 function Friend(props) {
 
-  const { data, category, onHandleRequest } = props;
+  const { userStatus, data, category, onHandleRequest } = props;
 
   function renderButton() {
     return category.method ?
@@ -18,7 +18,7 @@ function Friend(props) {
   return (
     <li className="friend">
       <Link to={`/${data.id}`}>{getFullName(data.profile)}</Link>
-      {renderButton()}
+      {userStatus.isCurrentUser && renderButton()}
     </li>
   );
 }

@@ -5,12 +5,12 @@ import ProfileForm from '../subcomponents/ProfileForm'
 
 function Profile(props) {
 
-  const userId = props.userId;
+  const userStatus = props.userStatus;
   const [profile, setProfile] = useState({});
   const [view, setView] = useState(true);
 
   const initProfile = useCallback(async () => {
-    const path = '/profiles/' + userId;
+    const path = '/profiles/' + userStatus.id;
     const requestOptions = {
       method: 'GET',
       headers: { 
@@ -21,15 +21,14 @@ function Profile(props) {
     const response = await fetch(API_URL + path, requestOptions);
     const newProfile = await response.json();
     setProfile(newProfile);
-    console.log(newProfile)
-  }, [userId]);
+  }, [userStatus]);
 
   useEffect(() => {
     initProfile();
   }, [initProfile]);
 
   async function handleProfileChange(profile) {
-    const path = '/profiles/' + userId;
+    const path = '/profiles/' + userStatus.id;
     const requestOptions = {
       method: 'PUT',
       headers: { 
@@ -43,10 +42,8 @@ function Profile(props) {
     setProfile(newProfile);
     changeView();
     const header = {
-      profile: {
         first_name: newProfile.first_name,
         last_name: newProfile.last_name,
-      }
     };
     props.onProfileUpdate(header);
   }
@@ -55,15 +52,21 @@ function Profile(props) {
     setView(!view);
   }
 
+  const noFriend = !userStatus.isFriend && 
+    !userStatus.isCurrentUser &&
+    <div>Befriend this user if you want to see more</div>;
+
   return (
     <div id="profile">
       Profile
+      {noFriend}
       {view ? 
         <ProfileView profile={profile}/> :
         <ProfileForm profile={profile} handleProfileChange={handleProfileChange}/>
       }
       {view ? 
-        <button onClick={changeView}>Change Profile</button> :
+        (userStatus.isCurrentUser && 
+        <button onClick={changeView}>Change Profile</button>) :
         <button onClick={changeView}>Back To View</button>
       }
     </div>

@@ -15,7 +15,13 @@ function User() {
 
   const { userId } = useParams();
   const [header, setHeader] = useState({
-    profile: {first_name: '', last_name: ''}
+    first_name: '',
+    last_name: ''
+  });
+  const [userStatus, setUserStatus] = useState({
+    id: userId,
+    isFriend: true,
+    isCurrentUser: false
   });
 
   const initHeader = useCallback(async () => {
@@ -28,8 +34,14 @@ function User() {
       }
     }
     const response = await fetch(API_URL + path, requestOptions);
-    const newHeader = await response.json();
-    setHeader(newHeader);
+    const result = await response.json();
+    console.log(result)
+    setHeader(result.data.profile);
+    setUserStatus({
+      id: result.data.id,
+      isFriend: result.is_friend,
+      isCurrentUser: result.is_current_user
+    })
   }, [userId]);
 
   useEffect(() => {
@@ -42,7 +54,7 @@ function User() {
 
   return (
     <div id="user">
-      {getFullName(header.profile)}
+      {getFullName(header)}
       <ul>
         <li>
           <Link to={`${url}/`}>Messages</Link>
@@ -56,13 +68,13 @@ function User() {
       </ul>
       <Switch>
         <Route exact path={path} render={() => (
-          <Messages userId={userId}/>
+          <Messages userStatus={userStatus}/>
         )}/>
         <Route exact path={`${path}/profile`} render={() => (
-          <Profile userId={userId} onProfileUpdate={updateHeader}/>
+          <Profile userStatus={userStatus} onProfileUpdate={updateHeader}/>
         )}/>
         <Route exact path={`${path}/friends`} render={() => (
-          <Friends userId={userId}/>
+          <Friends userStatus={userStatus}/>
         )}/>
       </Switch>
     </div>

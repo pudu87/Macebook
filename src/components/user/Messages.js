@@ -6,11 +6,11 @@ import Post from '../subcomponents/Post'
 
 function Messages(props) {
 
-  const userId = props.userId;
+  const userStatus = props.userStatus;
   const [posts, setPosts] = useState([]);
 
   const initPosts = useCallback(async () => {
-    const path = '/posts/' + userId;
+    const path = '/posts/' + userStatus.id;
     const requestOptions = {
       method: 'GET',
       headers: { 
@@ -20,8 +20,9 @@ function Messages(props) {
     }
     const response = await fetch(API_URL + path, requestOptions);
     const newPosts = await response.json();
+    console.log(newPosts)
     setPosts(newPosts);
-  }, [userId]);
+  }, [userStatus]);
 
   useEffect(() => {
     initPosts();
@@ -34,6 +35,13 @@ function Messages(props) {
     setPosts([newPost, ...posts]);
   }
 
+  const newPost = userStatus.isCurrentUser &&
+    <NewPost handleNewPost={handleNewPost}/>;
+
+  const noFriend = !userStatus.isFriend && 
+    !userStatus.isCurrentUser &&
+    <div>Befriend this user if you want to see more</div>;
+
   const postList = posts.map(post => {
     return <Post key={post.id} post={post}/>
   });
@@ -41,7 +49,8 @@ function Messages(props) {
   return (
     <div id="messages">
       Messages
-      <NewPost handleNewPost={handleNewPost}/>
+      {newPost}
+      {noFriend}
       {postList}
     </div>
   );

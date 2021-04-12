@@ -1,14 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { API_URL } from '../../Constants'
+import isEmpty from 'lodash/isEmpty'
 import Friend from '../subcomponents/Friend'
 
 function Friends(props) {
 
-  const userId = props.userId;
+  const userStatus = props.userStatus;
   const [friends, setFriends] = useState([]);
 
   const initFriends = useCallback(async () => {
-    const path = '/friendships/' + userId;
+    const path = '/friendships/' + userStatus.id;
     const requestOptions = {
       method: 'GET',
       headers: { 
@@ -19,7 +20,7 @@ function Friends(props) {
     const response = await fetch(API_URL + path, requestOptions);
     const newFriends = await response.json();
     setFriends(newFriends);
-  }, [userId]);
+  }, [userStatus]);
 
   useEffect(() => {
     initFriends();
@@ -49,6 +50,7 @@ function Friends(props) {
       return (
       <Friend 
         key={friend.id}
+        userStatus={userStatus}
         data={friend}
         category={categories[category]}
         onHandleRequest={handleRequest}/>
@@ -87,6 +89,7 @@ function Friends(props) {
 
   const categoryList = Object.keys(friends).map(category => {
     return (
+      !isEmpty(friends[category]) &&
       <li key={category}>
         {category}
         <ul>{getFriendList(category)}</ul>
