@@ -15,3 +15,22 @@ $nav-height: 80px;
   width: 100%;
   border-bottom: 1px solid #555;
 }
+
+// AVATAR
+
+.avatar {
+  width: 75px;
+  height: 75px;
+  background-size: cover;
+  border: 2px solid #555;
+}
+
+.post, 
+.comment,
+.friend {
+  > .avatar {
+    width: 25px;
+    height: 25px;
+    border-width: 1px;
+  }
+}

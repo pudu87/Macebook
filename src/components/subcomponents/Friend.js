@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import { getFullName } from "../logic/Helpers";
 
 function Friend(props) {
-
   const { userStatus, data, category, onHandleRequest } = props;
 
   function renderButton() {
@@ -17,6 +16,10 @@ function Friend(props) {
 
   return (
     <li className="friend">
+      <div 
+        className='avatar'
+        style={{ backgroundImage: `url(${data.profile.avatar})` }}>
+      </div>
       <Link to={`/${data.id}`}>{getFullName(data.profile)}</Link>
       {userStatus.isCurrentUser && renderButton()}
     </li>

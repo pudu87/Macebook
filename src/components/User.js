@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Switch, Route, Link, useRouteMatch, useParams } from "react-router-dom"
+import { Switch, Route, Link, useRouteMatch, useParams, NavLink } from "react-router-dom"
 import { API_URL } from '../Constants'
 import { getFullName } from "./logic/Helpers";
 import isEqual from 'lodash/isEqual'
@@ -16,7 +16,8 @@ function User() {
   const { userId } = useParams();
   const [header, setHeader] = useState({
     first_name: '',
-    last_name: ''
+    last_name: '',
+    avatar: null
   });
   const [userStatus, setUserStatus] = useState({
     id: userId,
@@ -35,7 +36,6 @@ function User() {
     }
     const response = await fetch(API_URL + path, requestOptions);
     const result = await response.json();
-    console.log(result)
     setHeader(result.data.profile);
     setUserStatus({
       id: result.data.id,
@@ -52,9 +52,19 @@ function User() {
     if (!isEqual(header, newHeader)) { setHeader(newHeader) }
   }
 
+  const headerTag = (
+    <header>
+      <h2>{getFullName(header)}</h2>
+      <div 
+        className='avatar'
+        style={{ backgroundImage: `url(${header.avatar})` }}>
+      </div>
+    </header>
+  );
+
   return (
     <div id="user">
-      {getFullName(header)}
+      {headerTag}
       <ul>
         <li>
           <Link to={`${url}/`}>Messages</Link>

@@ -49,6 +49,10 @@ function Post(props) {
 
   return (
     <article className="post">
+      <div 
+        className='avatar'
+        style={{ backgroundImage: `url(${post.profile.avatar})` }}>
+      </div>
       <Link to={`/${post.user_id}`}>{getFullName(post.profile)}</Link>
       <p>{post.content}</p>
       <ul>

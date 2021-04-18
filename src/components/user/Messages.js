@@ -5,7 +5,6 @@ import NewPost from '../subcomponents/NewPost'
 import Post from '../subcomponents/Post'
 
 function Messages(props) {
-
   const userStatus = props.userStatus;
   const [posts, setPosts] = useState([]);
 
@@ -20,7 +19,6 @@ function Messages(props) {
     }
     const response = await fetch(API_URL + path, requestOptions);
     const newPosts = await response.json();
-    console.log(newPosts)
     setPosts(newPosts);
   }, [userStatus]);
 

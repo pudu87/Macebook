@@ -10,21 +10,35 @@ function ProfileForm(props) {
     props.handleProfileChange(profile);
   }
 
-  function changeItem(e) {
-    setProfile({...profile, [e.target.id]: e.target.value})
+  function handleChange(e) {
+    if (e.target.type === 'file') {
+      setProfile({...profile, [e.target.name]: e.target.files[0]})
+    } else {
+      setProfile({...profile, [e.target.name]: e.target.value})
+    }
   }
 
   const formList = Object.keys(profile).map(key => {
-    return (
-      <label key={key}>{transformKey(key) + ': '}
-        <input
-          type='text'
-          id={key}
-          name={key}
-          value={profile[key]}
-          onChange={changeItem}/>
-      </label>
-    )
+    if (key==='avatar') {
+      return (
+        <label key={key}>Avatar: 
+          <input
+            type='file'
+            name={key}
+            onChange={handleChange}/>
+        </label>
+      )
+    } else {
+      return (
+        <label key={key}>{transformKey(key) + ': '}
+          <input
+            type='text'
+            name={key}
+            value={profile[key]}
+            onChange={handleChange}/>
+        </label>
+      )
+    }
   })
 
   return (

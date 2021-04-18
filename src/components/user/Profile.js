@@ -21,6 +21,7 @@ function Profile(props) {
     const response = await fetch(API_URL + path, requestOptions);
     const newProfile = await response.json();
     setProfile(newProfile);
+    console.log(newProfile)
   }, [userStatus]);
 
   useEffect(() => {
@@ -29,13 +30,16 @@ function Profile(props) {
 
   async function handleProfileChange(profile) {
     const path = '/profiles/' + userStatus.id;
+    const formData = new FormData();
+    Object.entries(profile).forEach(([key, value]) => {
+      formData.append(`profile[${key}]`, value);
+    })
     const requestOptions = {
       method: 'PUT',
-      headers: { 
-        'Content-Type': 'application/json',
+      headers: {
         'Authorization': localStorage.getItem('token')
       },
-      body: JSON.stringify({ profile })
+      body: formData
     }
     const response = await fetch(API_URL + path, requestOptions);
     const newProfile = await response.json();
@@ -44,6 +48,7 @@ function Profile(props) {
     const header = {
         first_name: newProfile.first_name,
         last_name: newProfile.last_name,
+        avatar: newProfile.avatar
     };
     props.onProfileUpdate(header);
   }
