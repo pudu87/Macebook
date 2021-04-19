@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { API_URL } from '../../Constants'
 import isEmpty from 'lodash/isEmpty'
-import Friend from '../subcomponents/Friend'
+import UserDisplay from '../subcomponents/UserDisplay'
 
 function Friends(props) {
 
@@ -45,19 +45,6 @@ function Friends(props) {
     }
   };
 
-  function getFriendList(category) {
-    return friends[category].map(friend => {
-      return (
-      <Friend 
-        key={friend.id}
-        userStatus={userStatus}
-        data={friend}
-        category={categories[category]}
-        onHandleRequest={handleRequest}/>
-      )
-    })
-  }
-
   async function handleRequest(method, id) {
     const path = method === 'POST' ? '/friendships' : '/friendships/' + id;
     const body = method === 'POST' ? 
@@ -96,6 +83,27 @@ function Friends(props) {
       </li>
     )
   });
+
+
+  function getFriendList(category) {
+    return friends[category].map(friend => {
+      return (
+        <li 
+          key={friend.id}
+          className='friend'>
+          <UserDisplay data={friend}/>
+          {userStatus.isCurrentUser && 
+            renderButton(categories[category], friend.id)}
+        </li>
+      )
+    })
+  }
+
+  function renderButton(cat, id) {
+    return cat.method ?
+      <button onClick={() => handleRequest(cat.method, id)}>{cat.text}</button> :
+      <div>{cat.text}</div>
+  }
 
   return (
     <div id="friends">

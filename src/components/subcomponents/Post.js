@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { API_URL } from '../../Constants'
-import { getFullName } from '../logic/Helpers'
 import Comment from './Comment'
 import NewComment from './NewComment'
+import UserDisplay from './UserDisplay'
 
 function Post(props) {
 
   const post = props.post;
+  console.log(post)
   const [comments, setComments] = useState([]);
 
   async function showComments() {
@@ -49,11 +50,7 @@ function Post(props) {
 
   return (
     <article className="post">
-      <div 
-        className='avatar'
-        style={{ backgroundImage: `url(${post.profile.avatar})` }}>
-      </div>
-      <Link to={`/${post.user_id}`}>{getFullName(post.profile)}</Link>
+      <UserDisplay data={post}/>
       <p>{post.content}</p>
       <ul>
         <li>#Likes: {post.likes_count}</li>
