@@ -1,4 +1,4 @@
-import { transformKey } from '../logic/Helpers'
+import { getAvatarUrl, transformKey } from '../logic/Helpers'
 
 function ProfileView(props) {
 
@@ -9,7 +9,7 @@ function ProfileView(props) {
       <div
         key={key}
         className={key}
-        style={{ backgroundImage: `url(${value})` }}>
+        style={{ backgroundImage: getAvatarUrl(value) }}>
       </div>
     )
   }

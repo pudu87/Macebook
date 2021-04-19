@@ -21,7 +21,6 @@ function Profile(props) {
     const response = await fetch(API_URL + path, requestOptions);
     const newProfile = await response.json();
     setProfile(newProfile);
-    console.log(newProfile)
   }, [userStatus]);
 
   useEffect(() => {

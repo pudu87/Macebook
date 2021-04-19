@@ -8,7 +8,6 @@ import UserDisplay from './UserDisplay'
 function Post(props) {
 
   const post = props.post;
-  console.log(post)
   const [comments, setComments] = useState([]);
 
   async function showComments() {

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Switch, Route, Link, useRouteMatch, useParams, NavLink } from "react-router-dom"
 import { API_URL } from '../Constants'
-import { getFullName } from "./logic/Helpers";
+import { getFullName, getAvatarUrl } from "./logic/Helpers";
 import isEqual from 'lodash/isEqual'
 import Messages from './user/Messages'
 import Profile from './user/Profile'
@@ -57,7 +57,7 @@ function User() {
       <h2>{getFullName(header)}</h2>
       <div 
         className='avatar'
-        style={{ backgroundImage: `url(${header.avatar})` }}>
+        style={{ backgroundImage: getAvatarUrl(header.avatar) }}>
       </div>
     </header>
   );
