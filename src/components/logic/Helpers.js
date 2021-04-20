@@ -1,3 +1,4 @@
+import { API_URL } from '../../Constants'
 import Ditto from '../../images/ditto.jpeg'
 
 export function getFullName(profile) {
@@ -8,15 +9,18 @@ export function getAvatarUrl(img) {
   return img ? `url(${img})` : `url(${Ditto})`;
 }
 
-export function getNewPostRequestOptions(content) {
-  return {
+export async function fetchNewPost(post) {
+  const formData = new FormData();
+  Object.entries(post).forEach(([key, value]) => {
+    formData.append(`post[${key}]`, value);
+  })
+  const requestOptions = {
     method: 'POST',
-    headers: { 
-      'Content-Type': 'application/json',
-      'Authorization': localStorage.getItem('token')
-    },
-    body: JSON.stringify({ post: { content: content } })
+    headers: { 'Authorization': localStorage.getItem('token')},
+    body: formData
   }
+  const response = await fetch(API_URL + '/posts', requestOptions);
+  return await response.json();
 }
 
 export function transformKey(key) {

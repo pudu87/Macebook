@@ -10,7 +10,7 @@ function UserDisplay(props) {
         className='avatar'
         style={{ backgroundImage: getAvatarUrl(data.profile.avatar) }}>
       </div>
-      <Link to={`/${data.id}`}>{getFullName(data.profile)}</Link>
+      <Link to={`/${data.user_id}`}>{getFullName(data.profile)}</Link>
     </article>
   );
 }

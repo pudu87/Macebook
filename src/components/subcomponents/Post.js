@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { API_URL } from '../../Constants'
 import Comment from './Comment'
 import NewComment from './NewComment'
@@ -50,7 +49,12 @@ function Post(props) {
   return (
     <article className="post">
       <UserDisplay data={post}/>
-      <p>{post.content}</p>
+      {post.photo && 
+        <div 
+          className='photo'
+          style={{ backgroundImage: `url(${post.photo})` }}>
+        </div>}
+      <p className='content'>{post.content}</p>
       <ul>
         <li>#Likes: {post.likes_count}</li>
         <li>#Comments: {post.comments_count}</li>
