@@ -23,6 +23,33 @@ export async function fetchNewPost(post) {
   return await response.json();
 }
 
+export async function editPost(post, id) {
+  const formData = new FormData();
+  Object.entries(post).forEach(([key, value]) => {
+    formData.append(`post[${key}]`, value);
+  })
+  const path = '/posts/' + id;
+  const requestOptions = {
+    method: 'PUT',
+    headers: { 'Authorization': localStorage.getItem('token') },
+    body: formData
+  }
+  const response = await fetch(API_URL + path, requestOptions);
+  return await response.json();
+}
+
+export async function deletePost(id) {
+  const path = '/posts/' + id;
+  const requestOptions = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem('token')
+    }
+  }
+  await fetch(API_URL + path, requestOptions);
+}
+
 export function transformKey(key) {
   return key.split('_')
             .map(w => w[0].toUpperCase() + w.slice(1))

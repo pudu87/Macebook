@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Switch, Route, Link, useRouteMatch, useParams, NavLink } from "react-router-dom"
+import { Switch, Route, Link, useRouteMatch, useParams } from "react-router-dom"
 import { API_URL } from '../Constants'
 import { getFullName, getAvatarUrl } from "./logic/Helpers";
 import isEqual from 'lodash/isEqual'
@@ -21,8 +21,9 @@ function User() {
   });
   const [userStatus, setUserStatus] = useState({
     id: userId,
-    isFriend: true,
-    isCurrentUser: false
+    currentUserId: null,
+    isCurrentUser: false,
+    isFriend: true
   });
 
   const initHeader = useCallback(async () => {
@@ -39,9 +40,10 @@ function User() {
     setHeader(result.data.profile);
     setUserStatus({
       id: result.data.id,
-      isFriend: result.is_friend,
-      isCurrentUser: result.is_current_user
-    })
+      currentUserId: result.current_user_id,
+      isCurrentUser: result.is_current_user,
+      isFriend: result.is_friend
+    });
   }, [userId]);
 
   useEffect(() => {

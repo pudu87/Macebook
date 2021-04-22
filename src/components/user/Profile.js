@@ -35,9 +35,7 @@ function Profile(props) {
     })
     const requestOptions = {
       method: 'PUT',
-      headers: {
-        'Authorization': localStorage.getItem('token')
-      },
+      headers: { 'Authorization': localStorage.getItem('token') },
       body: formData
     }
     const response = await fetch(API_URL + path, requestOptions);

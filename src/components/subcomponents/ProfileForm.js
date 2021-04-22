@@ -7,7 +7,12 @@ function ProfileForm(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    props.handleProfileChange(profile);
+    if (typeof profile.avatar === 'string') { 
+      const { avatar, ...alteredProfile } = profile;
+      props.handleProfileChange(alteredProfile);
+    } else {
+      props.handleProfileChange(profile);
+    }
   }
 
   function handleChange(e) {
