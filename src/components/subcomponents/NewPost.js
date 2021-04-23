@@ -2,14 +2,19 @@ import { useState } from 'react'
 
 function NewPost(props) {
 
-  const [post, setPost] = useState({
-    content: '',
-    photo: null
-  });
+  const [post, setPost] = useState(initPost());
+
+  function initPost() {
+    return {
+      content: '',
+      photo: null
+    }
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
     props.handleNewPost(post);
+    setPost(initPost());
   }
 
   function handleChange(e) {
@@ -20,26 +25,32 @@ function NewPost(props) {
     }
   }
 
+  function removePhoto(e) {
+    e.preventDefault();
+    setPost({...post, photo: null});
+  }
+
   return (
     <div id="newpost">
       New Post
-      <form onSubmit={handleSubmit}>
+      <form>
         <input 
           type='textarea' 
           className='content'
           name='content'
           value={post.content}
-          onChange={handleChange}
-          placeholder='Add a new post here...'/>
-        <label>Add a photo: 
+          onChange={handleChange}/>
+        <label>Add photo: 
           <input
             type='file'
             name='photo'
             onChange={handleChange}/>
+            <button onClick={removePhoto}>Remove photo</button>
         </label>
         <input 
           type='submit' 
-          value='Post'/>
+          value='Post'
+          onClick={handleSubmit}/>
       </form>
     </div>
   );

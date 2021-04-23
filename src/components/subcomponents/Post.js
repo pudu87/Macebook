@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { API_URL } from '../../Constants'
+import { fetchNewLike, deleteLike } from '../logic/Helpers'
 import EditPost from './EditPost'
 import Comment from './Comment'
 import NewComment from './NewComment'
@@ -10,7 +11,6 @@ function Post(props) {
   const { post, currentUserId } = props;
   const [comments, setComments] = useState([]);
   const [edit, setEdit] = useState(false);
-  console.log(post);
 
   function handleDeletePost() {
     props.onDeletePost(post.id);
@@ -66,7 +66,7 @@ function Post(props) {
     await fetch(API_URL + path, requestOptions);
     const newComments = comments.filter(comment => comment.id !== id);
     setComments(newComments);
-    props.onUpdateCounter(post.id, 'comments_count', -1);
+    props.onUpdateCommentCounter(post.id, -1);
   }
 
   async function handleNewComment(content) {
@@ -86,7 +86,17 @@ function Post(props) {
     const response = await fetch(API_URL + '/comments', requestOptions);
     const newComment = await response.json();
     setComments([...comments, newComment]);
-    props.onUpdateCounter(post.id, 'comments_count', 1);
+    props.onUpdateCommentCounter(post.id, 1);
+  }
+
+  async function like() {
+    if (post.like_id) {
+      await deleteLike(post.like_id);
+      props.onUpdateLikeCounter(post.id, false);
+    } else {
+      const newLike = await fetchNewLike(post.id);
+      props.onUpdateLikeCounter(post.id, newLike.id);
+    }
   }
 
   const postView = (
@@ -113,6 +123,7 @@ function Post(props) {
       {currentUserId === post.user_id &&
         <button onClick={handleDeletePost}>X</button>}
       <button onClick={showComments}>ShowComments</button>
+      <button onClick={like}>{post.like_id ? 'Unlike' : 'Like'}</button>
     </div>
   );
 

@@ -26,10 +26,19 @@ function Messages(props) {
     initPosts();
   }, [initPosts]);
 
-  function handleUpdateCounter(id, key, value) {
-    setPosts(prev => prev.map(post => {
-      return post.id === id ? { key: post[key] + value, ...post } : post;
+  function handleUpdateCommentCounter(id, value) {
+    setPosts(posts.map(post => {
+      return post.id === id ?
+        { ...post, comments_count: post.comments_count + value } : post;
     }));
+  }
+
+  function handleUpdateLikeCounter(postId, likeId) {
+    const value = likeId ? 1 : -1;
+    setPosts(posts.map(post => {
+      return post.id === postId ? 
+        { ...post, like_id: likeId, likes_count: post.likes_count + value } : post;
+      }));
   }
 
   async function handleEditPost(post, id) {
@@ -60,7 +69,8 @@ function Messages(props) {
       key={post.id} 
       post={post}
       currentUserId={userStatus.currentUserId}
-      onUpdateCounter={handleUpdateCounter}
+      onUpdateCommentCounter={handleUpdateCommentCounter}
+      onUpdateLikeCounter={handleUpdateLikeCounter}
       onEditPost={handleEditPost}
       onDeletePost={handleDeletePost}/>
   });
