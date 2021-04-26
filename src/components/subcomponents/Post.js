@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { API_URL } from '../../Constants'
-import { fetchNewLike, deleteLike } from '../logic/Helpers'
+import { fetchNewComment, editComment, deleteComment, fetchNewLike, deleteLike } from '../logic/Helpers'
 import EditPost from './EditPost'
 import Comment from './Comment'
 import NewComment from './NewComment'
@@ -25,7 +25,7 @@ function Post(props) {
   }
 
   async function showComments() {
-    const path = '/comments/' + post.id;
+    const path = '/comments/P' + post.id;
     const requestOptions = {
       method: 'GET',
       headers: { 
@@ -38,55 +38,38 @@ function Post(props) {
     setComments(newComments);
   }
 
+  async function handleNewComment(content) {
+    const newComment = await fetchNewComment(post.id, 'Post', content);
+    setComments([...comments, newComment]);
+    props.onUpdateCommentCounter(post.id, 1);
+  }
+
   async function handleEditComment(comment, id) {
-    const formData = new FormData();
-    Object.entries(comment).forEach(([key, value]) => {
-      formData.append(`comment[${key}]`, value);
-    })
-    const path = '/comments/' + id;
-    const requestOptions = {
-      method: 'PUT',
-      headers: { 'Authorization': localStorage.getItem('token') },
-      body: formData
-    }
-    const response = await fetch(API_URL + path, requestOptions);
-    const edit = await response.json();
+    const edit = await editComment(comment, id)
     setComments(comments.map(comment => comment.id === edit.id ? edit : comment));
   }
 
   async function handleDeleteComment(id) {
-    const path = '/comments/' + id;
-    const requestOptions = {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token')
-      }
-    }
-    await fetch(API_URL + path, requestOptions);
+    await deleteComment(id);
     const newComments = comments.filter(comment => comment.id !== id);
     setComments(newComments);
     props.onUpdateCommentCounter(post.id, -1);
   }
 
-  async function handleNewComment(content) {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token')
-      },
-      body: JSON.stringify({ 
-        comment: { 
-          content: content,
-          post_id: post.id
-        } 
-      })
-    }
-    const response = await fetch(API_URL + '/comments', requestOptions);
-    const newComment = await response.json();
-    setComments([...comments, newComment]);
-    props.onUpdateCommentCounter(post.id, 1);
+  function handleUpdateCommentCounter(id, value) {
+    setComments(comments.map(comment => {
+      return comment.id === id ?
+        { ...comment, comments_count: comment.comments_count + value } : comment;
+    }));
+    props.onUpdateCommentCounter(post.id, value);
+  }
+
+  function handleUpdateLikeCounter(commentId, likeId) {
+    const value = likeId ? 1 : -1;
+    setComments(comments.map(comment => {
+      return comment.id === commentId ? 
+        { ...comment, like_id: likeId, likes_count: comment.likes_count + value } : comment;
+    }));
   }
 
   async function like() {
@@ -94,7 +77,7 @@ function Post(props) {
       await deleteLike(post.like_id);
       props.onUpdateLikeCounter(post.id, false);
     } else {
-      const newLike = await fetchNewLike(post.id);
+      const newLike = await fetchNewLike(post.id, 'Post');
       props.onUpdateLikeCounter(post.id, newLike.id);
     }
   }
@@ -133,7 +116,9 @@ function Post(props) {
       comment={comment}
       currentUserId={currentUserId}
       onEditComment={handleEditComment}
-      onDeleteComment={handleDeleteComment}/>
+      onDeleteComment={handleDeleteComment}
+      onUpdateCommentCounter={handleUpdateCommentCounter}
+      onUpdateLikeCounter={handleUpdateLikeCounter}/>
   });
 
   return (
@@ -147,7 +132,7 @@ function Post(props) {
       </ul>
       {optionList}
       <ul>{commentList}</ul>
-      <NewComment handleNewComment={handleNewComment}/>
+      <NewComment onNewComment={handleNewComment}/>
     </article>
   );
 }

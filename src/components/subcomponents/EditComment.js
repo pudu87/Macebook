@@ -10,7 +10,7 @@ function EditComment(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    props.handleEditComment(edit);
+    props.handleEditComment(edit, comment.id);
   }
 
   function handleChange(e) {

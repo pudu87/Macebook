@@ -6,7 +6,8 @@ function NewComment(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    props.handleNewComment(comment);
+    props.onNewComment(comment);
+    setComment('');
   }
 
   function handleChange(e) {

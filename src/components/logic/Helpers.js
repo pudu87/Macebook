@@ -50,14 +50,65 @@ export async function deletePost(id) {
   await fetch(API_URL + path, requestOptions);
 }
 
-export async function fetchNewLike(id) {
+export async function fetchNewComment(id, type, content) {
   const requestOptions = {
     method: 'POST',
     headers: { 
       'Content-Type': 'application/json',
       'Authorization': localStorage.getItem('token')
     },
-    body: JSON.stringify({ like: { post_id: id } })
+    body: JSON.stringify({ 
+      comment: { 
+        content: content,
+        commentable_id: id,
+        commentable_type: type
+      } 
+    })
+  }
+  const response = await fetch(API_URL + '/comments', requestOptions);
+  return await response.json();
+}
+
+export async function editComment(comment, id) {
+  const formData = new FormData();
+  Object.entries(comment).forEach(([key, value]) => {
+    formData.append(`comment[${key}]`, value);
+  })
+  const path = '/comments/' + id;
+  const requestOptions = {
+    method: 'PUT',
+    headers: { 'Authorization': localStorage.getItem('token') },
+    body: formData
+  }
+  const response = await fetch(API_URL + path, requestOptions);
+  return await response.json();
+}
+
+export async function deleteComment(id) {
+  const path = '/comments/' + id;
+  const requestOptions = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem('token')
+    }
+  }
+  await fetch(API_URL + path, requestOptions);
+}
+
+export async function fetchNewLike(id, type) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': localStorage.getItem('token')
+    },
+    body: JSON.stringify({ 
+      like: { 
+        likeable_id: id,
+        likeable_type: type
+        }
+      })
   }
   const response = await fetch(API_URL + '/likes', requestOptions);
   return await response.json();

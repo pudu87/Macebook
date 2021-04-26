@@ -43,3 +43,19 @@ $nav-height: 80px;
   background-size: cover;
   border: 2px solid #555;
 }
+
+// COMMENT
+
+.comment {
+  margin-left: 20px;
+  color: rgb(116, 74, 74);
+  border-left: 1px solid #777;
+}
+
+// REPLY
+
+.reply {
+  margin-left: 50px;
+  color: rgb(115, 150, 106);
+  border-left: 1px solid #999;
+}
