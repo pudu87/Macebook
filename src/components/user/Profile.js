@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { API_URL } from '../../Constants'
+import { fetchApi } from '../helpers/Fetching';
 import ProfileView from '../subcomponents/ProfileView'
 import ProfileForm from '../subcomponents/ProfileForm'
 
@@ -11,15 +11,7 @@ function Profile(props) {
 
   const initProfile = useCallback(async () => {
     const path = '/profiles/' + userStatus.id;
-    const requestOptions = {
-      method: 'GET',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token')
-      }
-    }
-    const response = await fetch(API_URL + path, requestOptions);
-    const newProfile = await response.json();
+    const newProfile = await fetchApi(path, 'GET');
     setProfile(newProfile);
   }, [userStatus]);
 
@@ -29,17 +21,7 @@ function Profile(props) {
 
   async function handleProfileChange(profile) {
     const path = '/profiles/' + userStatus.id;
-    const formData = new FormData();
-    Object.entries(profile).forEach(([key, value]) => {
-      formData.append(`profile[${key}]`, value);
-    })
-    const requestOptions = {
-      method: 'PUT',
-      headers: { 'Authorization': localStorage.getItem('token') },
-      body: formData
-    }
-    const response = await fetch(API_URL + path, requestOptions);
-    const newProfile = await response.json();
+    const newProfile = await fetchApi(path, 'PUT', profile);
     setProfile(newProfile);
     changeView();
     const header = {

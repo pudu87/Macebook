@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { API_URL } from '../../Constants'
-import { fetchNewComment, editComment, deleteComment, fetchNewLike, deleteLike } from '../logic/Helpers'
+import { fetchApi } from '../helpers/Fetching'
 import NewComment from './NewComment'
 import EditComment from './EditComment'
 import UserDisplay from './UserDisplay'
@@ -12,7 +11,12 @@ function Comment(props) {
   const [replies, setReplies] = useState([]);
 
   async function handleNewComment(content) {
-    const newComment = await fetchNewComment(comment.id, 'Comment', content);
+    const data = { 
+      content: content,
+      commentable_id: comment.id,
+      commentable_type: 'Comment'
+    }; 
+    const newComment = await fetchApi('/comments', 'POST', data);
     setReplies([...replies, newComment]);
     props.onUpdateCommentCounter(newComment.commentable_id, 1);
   }
@@ -22,7 +26,8 @@ function Comment(props) {
       props.onEditComment(edit, id);
     }
     else {
-      const comment = await editComment(edit, id);
+      const path = '/comments/' + id;
+      const comment = await fetchApi(path, 'PUT', edit);
       props.onUpdateReplies(comment)
     }
   }
@@ -33,7 +38,8 @@ function Comment(props) {
       props.onUpdateCommentCounter(comment.id, -1);
     }
     else {
-      await deleteComment(comment.id);
+      const path = '/comments/' + comment.id;
+      await fetchApi(path, 'DELETE');
       props.onUpdateReplies(comment.id);
       props.onUpdateCommentCounter(comment.commentable_id, -1);
     }
@@ -53,10 +59,15 @@ function Comment(props) {
 
   async function like() {
     if (comment.like_id) {
-      await deleteLike(comment.like_id);
+      const path = '/likes/' + comment.like_id;
+      await fetchApi(path, 'DELETE');
       props.onUpdateLikeCounter(comment.id, false);
     } else {
-      const newLike = await fetchNewLike(comment.id, 'Comment');
+      const data = {
+        likeable_id: comment.id,
+        likeable_type: 'Comment'
+      };
+      const newLike = await fetchApi('/likes', 'POST', data);
       props.onUpdateLikeCounter(comment.id, newLike.id);
     }
   }
@@ -75,15 +86,7 @@ function Comment(props) {
 
   async function showReplies() {
     const path = '/comments/C' + comment.id;
-    const requestOptions = {
-      method: 'GET',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token')
-      }
-    }
-    const response = await fetch(API_URL + path, requestOptions);
-    const newReplies = await response.json();
+    const newReplies = await fetchApi(path, 'GET');
     setReplies(newReplies);
   }
 

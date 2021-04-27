@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { fetchNewPost, editPost, deletePost } from '../logic/Helpers'
-import { API_URL } from '../../Constants'
+import { fetchApi } from '../helpers/Fetching'
 import NewPost from '../subcomponents/NewPost'
 import Post from '../subcomponents/Post'
 
@@ -11,21 +10,30 @@ function Messages(props) {
 
   const initPosts = useCallback(async () => {
     const path = userStatus.id ? '/posts/' + userStatus.id : '/posts';
-    const requestOptions = {
-      method: 'GET',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token')
-      }
-    }
-    const response = await fetch(API_URL + path, requestOptions);
-    const newPosts = await response.json();
+    const newPosts = await fetchApi(path, 'GET');
     setPosts(newPosts);
   }, [userStatus]);
 
   useEffect(() => {
     initPosts();
   }, [initPosts]);
+
+  async function handleEditPost(post, id) {
+    const path = '/posts/' + id;
+    const edit = await fetchApi(path, 'PUT', post);
+    setPosts(posts.map(post => post.id === edit.id ? edit : post));
+  }
+
+  async function handleDeletePost(id) {
+    const path = '/posts/' + id;
+    await fetchApi(path, 'DELETE');
+    setPosts(posts.filter(post => post.id !== id));
+  }
+
+  async function handleNewPost(post) {
+    const newPost = await fetchApi('/posts', 'POST', post);
+    setPosts([newPost, ...posts]);
+  }
 
   function handleUpdateCommentCounter(id, value) {
     setPosts(posts.map(post => {
@@ -40,22 +48,6 @@ function Messages(props) {
       return post.id === postId ? 
         { ...post, like_id: likeId, likes_count: post.likes_count + value } : post;
       }));
-  }
-
-  async function handleEditPost(post, id) {
-    const edit = await editPost(post, id);
-    setPosts(posts.map(post => post.id === edit.id ? edit : post));
-  }
-
-  async function handleDeletePost(id) {
-    await deletePost(id);
-    const newPosts = posts.filter(post => post.id !== id);
-    setPosts(newPosts);
-  }
-
-  async function handleNewPost(post) {
-    const newPost = await fetchNewPost(post);
-    setPosts([newPost, ...posts]);
   }
 
   const newPost = userStatus.isCurrentUser &&

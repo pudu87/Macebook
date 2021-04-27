@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { API_URL } from '../../Constants'
-import { fetchNewComment, editComment, deleteComment, fetchNewLike, deleteLike } from '../logic/Helpers'
+import { fetchApi } from '../helpers/Fetching'
 import EditPost from './EditPost'
 import Comment from './Comment'
 import NewComment from './NewComment'
@@ -26,31 +25,30 @@ function Post(props) {
 
   async function showComments() {
     const path = '/comments/P' + post.id;
-    const requestOptions = {
-      method: 'GET',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token')
-      }
-    }
-    const response = await fetch(API_URL + path, requestOptions);
-    const newComments = await response.json();
+    const newComments = await fetchApi(path, 'GET');
     setComments(newComments);
   }
 
   async function handleNewComment(content) {
-    const newComment = await fetchNewComment(post.id, 'Post', content);
+    const data = { 
+      content: content,
+      commentable_id: post.id,
+      commentable_type: 'Post'
+    }; 
+    const newComment = await fetchApi('/comments', 'POST', data);
     setComments([...comments, newComment]);
     props.onUpdateCommentCounter(post.id, 1);
   }
 
   async function handleEditComment(comment, id) {
-    const edit = await editComment(comment, id)
+    const path = '/comments/' + id;
+    const edit = await fetchApi(path, 'PUT', comment);
     setComments(comments.map(comment => comment.id === edit.id ? edit : comment));
   }
 
   async function handleDeleteComment(id) {
-    await deleteComment(id);
+    const path = '/comments/' + id;
+    await fetchApi(path, 'DELETE');
     const newComments = comments.filter(comment => comment.id !== id);
     setComments(newComments);
     props.onUpdateCommentCounter(post.id, -1);
@@ -74,10 +72,15 @@ function Post(props) {
 
   async function like() {
     if (post.like_id) {
-      await deleteLike(post.like_id);
+      const path = '/likes/' + post.like_id;
+      await fetchApi(path, 'DELETE');
       props.onUpdateLikeCounter(post.id, false);
     } else {
-      const newLike = await fetchNewLike(post.id, 'Post');
+      const data = {
+        likeable_id: post.id,
+        likeable_type: 'Post'
+      };
+      const newLike = await fetchApi('/likes', 'POST', data);
       props.onUpdateLikeCounter(post.id, newLike.id);
     }
   }

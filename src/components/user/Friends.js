@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { API_URL } from '../../Constants'
+import { fetchApi } from '../helpers/Fetching';
 import isEmpty from 'lodash/isEmpty'
 import UserDisplay from '../subcomponents/UserDisplay'
 
@@ -10,15 +10,7 @@ function Friends(props) {
 
   const initFriends = useCallback(async () => {
     const path = '/friendships/' + userStatus.id;
-    const requestOptions = {
-      method: 'GET',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token')
-      }
-    }
-    const response = await fetch(API_URL + path, requestOptions);
-    const newFriends = await response.json();
+    const newFriends = await fetchApi(path, 'GET');
     setFriends(newFriends);
   }, [userStatus]);
 
@@ -47,18 +39,8 @@ function Friends(props) {
 
   async function handleRequest(method, id) {
     const path = method === 'POST' ? '/friendships' : '/friendships/' + id;
-    const body = method === 'POST' ? 
-      JSON.stringify({ friendship: { friend_id: id } }) : null;
-    const requestOptions = {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token')
-      },
-      body
-    };
-    const response = await fetch(API_URL + path, requestOptions);
-    const result = await response.json();
+    const data = method === 'POST' ? { friend_id: id } : null;
+    const result = await fetchApi(path, method, data);
     updateFriendList(result);
   }
 

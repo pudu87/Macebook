@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Switch, Route, Link, useRouteMatch, useParams } from "react-router-dom"
-import { API_URL } from '../Constants'
-import { getFullName, getAvatarUrl } from "./logic/Helpers";
+import { getFullName, getAvatarUrl } from "./helpers/General";
+import { fetchApi } from './helpers/Fetching';
 import isEqual from 'lodash/isEqual'
 import Messages from './user/Messages'
 import Profile from './user/Profile'
@@ -28,15 +28,7 @@ function User() {
 
   const initHeader = useCallback(async () => {
     const path = '/users/' + userId;
-    const requestOptions = {
-      method: 'GET',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token')
-      }
-    }
-    const response = await fetch(API_URL + path, requestOptions);
-    const result = await response.json();
+    const result = await fetchApi(path, 'GET')
     setHeader(result.data.profile);
     setUserStatus({
       id: result.data.id,

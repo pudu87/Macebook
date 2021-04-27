@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { transformKey } from '../logic/Helpers'
+import { transformKey } from '../helpers/General'
 
 function ProfileForm(props) {
 

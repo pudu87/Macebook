@@ -1,4 +1,4 @@
-import { getAvatarUrl, transformKey } from '../logic/Helpers'
+import { getAvatarUrl, transformKey } from '../helpers/General'
 
 function ProfileView(props) {
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { API_URL } from '../Constants'
+import { fetchApi } from './helpers/Fetching';
 import Messages from './user/Messages'
 
 function DashBoard() {
@@ -12,15 +12,7 @@ function DashBoard() {
 
   async function initUserStatus() {
     const path = '/users/' + 0;
-    const requestOptions = {
-      method: 'GET',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': localStorage.getItem('token')
-      }
-    }
-    const response = await fetch(API_URL + path, requestOptions);
-    const currentUserId = await response.json();
+    const currentUserId = await fetchApi(path, 'GET');
     setUserStatus(prev => {
       return { ...prev, currentUserId: currentUserId }
     });

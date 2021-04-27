@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { getFullName, getAvatarUrl } from '../logic/Helpers';
+import { getFullName, getAvatarUrl } from '../helpers/General';
 
 function UserDisplay(props) {
   const data = props.data;
