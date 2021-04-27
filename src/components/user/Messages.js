@@ -5,11 +5,12 @@ import NewPost from '../subcomponents/NewPost'
 import Post from '../subcomponents/Post'
 
 function Messages(props) {
+
   const userStatus = props.userStatus;
   const [posts, setPosts] = useState([]);
 
   const initPosts = useCallback(async () => {
-    const path = '/posts/' + userStatus.id;
+    const path = userStatus.id ? '/posts/' + userStatus.id : '/posts';
     const requestOptions = {
       method: 'GET',
       headers: { 
@@ -60,8 +61,7 @@ function Messages(props) {
   const newPost = userStatus.isCurrentUser &&
     <NewPost handleNewPost={handleNewPost}/>;
 
-  const noFriend = !userStatus.isFriend && 
-    !userStatus.isCurrentUser &&
+  const noFriend = !userStatus.isFriend && !userStatus.isCurrentUser &&
     <div>Befriend this user if you want to see more</div>;
 
   const postList = posts.map(post => {
