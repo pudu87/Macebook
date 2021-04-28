@@ -13,7 +13,7 @@ function NewPost(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    props.handleNewPost(post);
+    props.onNewPost(post);
     setPost(initPost());
   }
 

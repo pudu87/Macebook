@@ -13,9 +13,9 @@ function EditPost(props) {
     e.preventDefault();
     if (typeof edit.photo === 'string') { 
       const { photo, ...alteredEdit } = edit;
-      props.handleEditPost(alteredEdit);
+      props.onEditPost(alteredEdit);
     } else {
-      props.handleEditPost(edit);
+      props.onEditPost(edit);
     }
   }
 

@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import { transformKey } from '../helpers/General'
 
-function ProfileForm(props) {
+function EditProfile(props) {
 
   const [profile, setProfile] = useState(props.profile);
 
   function handleSubmit(e) {
     e.preventDefault();
     if (typeof profile.avatar === 'string') { 
-      const { avatar, ...alteredProfile } = profile;
-      props.handleProfileChange(alteredProfile);
+      const { avatar, ...profileWithoutAvatar } = profile;
+      props.onProfileChange(profileWithoutAvatar);
     } else {
-      props.handleProfileChange(profile);
+      props.onProfileChange(profile);
     }
   }
 
@@ -24,27 +24,17 @@ function ProfileForm(props) {
   }
 
   const formList = Object.keys(profile).map(key => {
-    if (key==='avatar') {
-      return (
-        <label key={key}>Avatar: 
-          <input
-            type='file'
-            name={key}
-            onChange={handleChange}/>
-        </label>
-      )
-    } else {
-      return (
-        <label key={key}>{transformKey(key) + ': '}
-          <input
-            type='text'
-            name={key}
-            value={profile[key]}
-            onChange={handleChange}/>
-        </label>
-      )
-    }
-  })
+    const avatar = key === 'avatar';
+    return (
+      <label key={key}>{transformKey(key) + ': '}
+        <input
+          type={avatar ? 'file' : 'text'}
+          name={key}
+          value={avatar ? undefined : profile[key]}
+          onChange={handleChange}/>
+      </label>
+    )
+  });
 
   return (
     <div id="profileform">
@@ -53,8 +43,9 @@ function ProfileForm(props) {
         {formList}
         <input type='submit' value='Confirm Changes'/>
       </form>
+      <button onClick={() => {props.onChangeView()}}>Back To View</button>
     </div>
   );
 }
 
-export default ProfileForm;
+export default EditProfile;

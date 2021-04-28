@@ -10,16 +10,18 @@ function EditComment(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    props.handleEditComment(edit, comment.id);
+    props.onEditComment(edit, comment.id);
   }
 
   function handleChange(e) {
     setEdit({...edit, [e.target.name]: e.target.value});
   }
 
+  const title = props.parent === 'Post' ? 'Comment' : 'Reply';
+
   return (
     <div className="edit-comment">
-      Edit Comment
+      Edit {title}
       <form>
         <input 
           type='textarea' 

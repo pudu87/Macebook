@@ -9,35 +9,30 @@ function Post(props) {
 
   const { post, currentUserId } = props;
   const [comments, setComments] = useState([]);
+  const [commentsView, setCommentsView] = useState(false);
   const [edit, setEdit] = useState(false);
-
-  function handleDeletePost() {
-    props.onDeletePost(post.id);
-  }
-
-  function toggleEdit() {
-    setEdit(!edit);
-  }
 
   function handleEditPost(edit) {
     props.onEditPost(edit, post.id);
+    setEdit(!edit);
   }
 
   async function showComments() {
-    const path = '/comments/P' + post.id;
-    const newComments = await fetchApi(path, 'GET');
-    setComments(newComments);
+    if (comments.length === 0) {
+      const path = '/comments/P' + post.id;
+      const newComments = await fetchApi(path, 'GET');
+      setComments(newComments);
+    }
+    setCommentsView(!commentsView);
   }
 
-  async function handleNewComment(content) {
-    const data = { 
-      content: content,
-      commentable_id: post.id,
-      commentable_type: 'Post'
-    }; 
+  async function handleNewComment(data) {
+    data.commentable_id = post.id;
+    data.commentable_type = 'Post';
     const newComment = await fetchApi('/comments', 'POST', data);
     setComments([...comments, newComment]);
     props.onUpdateCommentCounter(post.id, 1);
+    if (!commentsView) showComments();
   }
 
   async function handleEditComment(comment, id) {
@@ -46,12 +41,12 @@ function Post(props) {
     setComments(comments.map(comment => comment.id === edit.id ? edit : comment));
   }
 
-  async function handleDeleteComment(id) {
+  async function handleDeleteComment(id, value) {
     const path = '/comments/' + id;
     await fetchApi(path, 'DELETE');
     const newComments = comments.filter(comment => comment.id !== id);
     setComments(newComments);
-    props.onUpdateCommentCounter(post.id, -1);
+    props.onUpdateCommentCounter(post.id, value);
   }
 
   function handleUpdateCommentCounter(id, value) {
@@ -71,19 +66,25 @@ function Post(props) {
   }
 
   async function like() {
-    if (post.like_id) {
-      const path = '/likes/' + post.like_id;
-      await fetchApi(path, 'DELETE');
-      props.onUpdateLikeCounter(post.id, false);
-    } else {
-      const data = {
-        likeable_id: post.id,
-        likeable_type: 'Post'
-      };
-      const newLike = await fetchApi('/likes', 'POST', data);
-      props.onUpdateLikeCounter(post.id, newLike.id);
-    }
+    const data = {
+      likeable_id: post.id,
+      likeable_type: 'Post'
+    };
+    const newLike = await fetchApi('/likes', 'POST', data);
+    props.onUpdateLikeCounter(post.id, newLike.id);
   }
+
+  async function unlike() {
+    const path = '/likes/' + post.like_id;
+    await fetchApi(path, 'DELETE');
+    props.onUpdateLikeCounter(post.id, false);
+  }
+
+  const postForm = (
+    <EditPost
+      post={post} 
+      onEditPost={handleEditPost}/>
+  );
 
   const postView = (
     <div className='post-view'>
@@ -96,26 +97,41 @@ function Post(props) {
     </div>
   );
 
-  const postForm = (
-    <EditPost
-      post={post} 
-      handleEditPost={handleEditPost}/>
+  const attributeList = (
+    <ul>
+      <li>#Likes: {post.likes_count}</li>
+      <li>#Comments: {post.comments_count}</li>
+      <li>Date: {post.created_at}</li>
+    </ul>
   );
-  
+
   const optionList = (
     <div className='buttons'>
       {currentUserId === post.user_id &&
-        <button onClick={toggleEdit}>{edit ? 'Undo' : 'Edit'}</button>}
+        <button 
+          className='toggle-edit-post'
+          onClick={() => {setEdit(!edit)}}>{edit ? 'Undo' : 'Edit'}</button>}
       {currentUserId === post.user_id &&
-        <button onClick={handleDeletePost}>X</button>}
-      <button onClick={showComments}>ShowComments</button>
-      <button onClick={like}>{post.like_id ? 'Unlike' : 'Like'}</button>
+        <button 
+          className='delete-post'
+          onClick={() => {props.onDeletePost(post.id)}}>X</button>}
+      {post.comments_count > 0 && 
+        <button 
+          className='show-comments'
+          onClick={showComments}>
+          {commentsView ? 'Hide Comments' : 'Show Comments'}</button>}
+      <button 
+        className='like'
+        onClick={() => { post.like_id ? unlike() : like() }}>
+        {post.like_id ? 'Unlike' : 'Like'}
+      </button>
     </div>
   );
 
   const commentList = comments.map(comment => {
     return <Comment 
       key={comment.id} 
+      parent='Post'
       comment={comment}
       currentUserId={currentUserId}
       onEditComment={handleEditComment}
@@ -128,14 +144,12 @@ function Post(props) {
     <article className="post">
       <UserDisplay data={post}/>
       {edit ? postForm : postView}
-      <ul>
-        <li>#Likes: {post.likes_count}</li>
-        <li>#Comments: {post.comments_count}</li>
-        <li>Date: {post.created_at}</li>
-      </ul>
+      {attributeList}
       {optionList}
-      <ul>{commentList}</ul>
-      <NewComment onNewComment={handleNewComment}/>
+      {commentsView && <ul>{commentList}</ul>}
+      <NewComment 
+        parent='Post'
+        onNewComment={handleNewComment}/>
     </article>
   );
 }

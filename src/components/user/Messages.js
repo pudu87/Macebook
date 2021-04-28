@@ -18,6 +18,11 @@ function Messages(props) {
     initPosts();
   }, [initPosts]);
 
+  async function handleNewPost(post) {
+    const newPost = await fetchApi('/posts', 'POST', post);
+    setPosts([newPost, ...posts]);
+  }
+
   async function handleEditPost(post, id) {
     const path = '/posts/' + id;
     const edit = await fetchApi(path, 'PUT', post);
@@ -28,11 +33,6 @@ function Messages(props) {
     const path = '/posts/' + id;
     await fetchApi(path, 'DELETE');
     setPosts(posts.filter(post => post.id !== id));
-  }
-
-  async function handleNewPost(post) {
-    const newPost = await fetchApi('/posts', 'POST', post);
-    setPosts([newPost, ...posts]);
   }
 
   function handleUpdateCommentCounter(id, value) {
@@ -51,7 +51,7 @@ function Messages(props) {
   }
 
   const newPost = userStatus.isCurrentUser &&
-    <NewPost handleNewPost={handleNewPost}/>;
+    <NewPost onNewPost={handleNewPost}/>;
 
   const noFriend = !userStatus.isFriend && !userStatus.isCurrentUser &&
     <div>Befriend this user if you want to see more</div>;

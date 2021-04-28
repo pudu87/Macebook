@@ -6,35 +6,45 @@ import UserDisplay from './UserDisplay'
 
 function Comment(props) {
 
-  const { comment, currentUserId } = props;
-  const [edit, setEdit] = useState(false);
+  const { parent, comment, currentUserId } = props;
   const [replies, setReplies] = useState([]);
+  const [repliesView, setRepliesView] = useState(false);
+  const [edit, setEdit] = useState(false);
 
-  async function handleNewComment(content) {
-    const data = { 
-      content: content,
-      commentable_id: comment.id,
-      commentable_type: 'Comment'
-    }; 
+  async function showReplies() {
+    if (replies.length === 0) {
+      const path = '/comments/C' + comment.id;
+      const newReplies = await fetchApi(path, 'GET');
+      setReplies(newReplies);
+    }
+    setRepliesView(!repliesView);
+  }
+
+  async function handleNewComment(data) {
+    data.commentable_id = comment.id;
+    data.commentable_type = 'Comment';
     const newComment = await fetchApi('/comments', 'POST', data);
     setReplies([...replies, newComment]);
     props.onUpdateCommentCounter(newComment.commentable_id, 1);
+    if (!repliesView) showReplies();
   }
 
   async function handleEditComment(edit, id) {
-    if (comment.commentable_type === 'Post') {
+    if (parent === 'Post') {
       props.onEditComment(edit, id);
     }
     else {
       const path = '/comments/' + id;
       const comment = await fetchApi(path, 'PUT', edit);
-      props.onUpdateReplies(comment)
+      props.onUpdateReplies(comment);
     }
+    setEdit(!edit);
   }
 
   async function handleDeleteComment() {
-    if (comment.commentable_type === 'Post') {
-      props.onDeleteComment(comment.id);
+    if (parent === 'Post') {
+      const value = -1 - comment.comments_count;
+      props.onDeleteComment(comment.id, value);
       props.onUpdateCommentCounter(comment.id, -1);
     }
     else {
@@ -42,33 +52,6 @@ function Comment(props) {
       await fetchApi(path, 'DELETE');
       props.onUpdateReplies(comment.id);
       props.onUpdateCommentCounter(comment.commentable_id, -1);
-    }
-  }
-
-  function handleUpdateCommentCounter(id, value) {
-    props.onUpdateCommentCounter(id, value);
-  }
-
-  function handleUpdateLikeCounter(commentId, likeId) {
-    const value = likeId ? 1 : -1;
-    setReplies(replies.map(comment => {
-      return comment.id === commentId ? 
-        { ...comment, like_id: likeId, likes_count: comment.likes_count + value } : comment;
-    }));
-  }
-
-  async function like() {
-    if (comment.like_id) {
-      const path = '/likes/' + comment.like_id;
-      await fetchApi(path, 'DELETE');
-      props.onUpdateLikeCounter(comment.id, false);
-    } else {
-      const data = {
-        likeable_id: comment.id,
-        likeable_type: 'Comment'
-      };
-      const newLike = await fetchApi('/likes', 'POST', data);
-      props.onUpdateLikeCounter(comment.id, newLike.id);
     }
   }
 
@@ -80,20 +63,34 @@ function Comment(props) {
     }
   }
 
-  function toggleEdit() {
-    setEdit(!edit);
+  function handleUpdateLikeCounter(commentId, likeId) {
+    const value = likeId ? 1 : -1;
+    setReplies(replies.map(comment => {
+      return comment.id === commentId ? 
+        { ...comment, like_id: likeId, likes_count: comment.likes_count + value } : comment;
+    }));
   }
 
-  async function showReplies() {
-    const path = '/comments/C' + comment.id;
-    const newReplies = await fetchApi(path, 'GET');
-    setReplies(newReplies);
+  async function like() {
+    const data = {
+      likeable_id: comment.id,
+      likeable_type: 'Comment'
+    };
+    const newLike = await fetchApi('/likes', 'POST', data);
+    props.onUpdateLikeCounter(comment.id, newLike.id);
+  }
+
+  async function unlike() {
+    const path = '/likes/' + comment.like_id;
+    await fetchApi(path, 'DELETE');
+    props.onUpdateLikeCounter(comment.id, false);
   }
 
   const commentForm = (
     <EditComment
+      parent={parent}
       comment={comment} 
-      handleEditComment={handleEditComment}/>
+      onEditComment={handleEditComment}/>
   );
 
   const commentView = (
@@ -102,27 +99,49 @@ function Comment(props) {
     </div>
   );
 
+  const attributeList = (
+    <ul>
+      <li>#Likes: {comment.likes_count}</li>
+      {parent === 'Post' &&
+        <li>#Replies: {comment.comments_count}</li>}
+      <li>Date: {comment.created_at}</li>
+    </ul>
+  );
+
   const optionList = (
     <div className='buttons'>
       {currentUserId === comment.user_id &&
-        <button onClick={toggleEdit}>{edit ? 'Undo' : 'Edit'}</button>}
+        <button 
+          className='toggle-edit-comment'
+          onClick={() => {setEdit(!edit)}}>
+          {edit ? 'Undo' : 'Edit'}</button>}
       {currentUserId === comment.user_id &&
-        <button onClick={handleDeleteComment}>X</button>}
-      {comment.commentable_type === 'Post' &&
-        <button onClick={showReplies}>ShowReplies</button>}
-      <button onClick={like}>{comment.like_id ? 'Unlike' : 'Like'}</button>
+        <button 
+          className='delete-comment'
+          onClick={handleDeleteComment}>X</button>}
+      {comment.comments_count > 0 &&
+        <button 
+          className='show-replies'
+          onClick={showReplies}>
+          {repliesView ? 'Hide Replies' : 'Show Replies'}</button>}
+      <button 
+        className='like'
+        onClick={() => { comment.like_id ? unlike() : like() }}>
+        {comment.like_id ? 'Unlike' : 'Like'}
+      </button>
     </div>
   );
 
   const replyList = replies.map(reply => {
     return <Comment 
       key={reply.id} 
+      parent='Comment'
       comment={reply}
       currentUserId={currentUserId}
       onEditComment={handleEditComment}
       onDeleteComment={handleDeleteComment}
       onUpdateReplies={updateReplies}
-      onUpdateCommentCounter={handleUpdateCommentCounter}
+      onUpdateCommentCounter={(id, value) => {props.onUpdateCommentCounter(id, value)}}
       onUpdateLikeCounter={handleUpdateLikeCounter}/>
   });
 
@@ -130,15 +149,13 @@ function Comment(props) {
     <li className="comment">
       <UserDisplay data={comment}/>
       {edit ? commentForm : commentView}
-      <ul>
-        <li>#Likes: {comment.likes_count}</li>
-        <li>#Replies: {comment.comments_count}</li>
-        <li>Date: {comment.created_at}</li>
-      </ul>
+      {attributeList}
       {optionList}
-      <ul>{replyList}</ul>
+      {repliesView && <ul>{replyList}</ul>}
       {comment.commentable_type === 'Post' &&
-        <NewComment onNewComment={handleNewComment}/>}
+        <NewComment 
+          parent='Comment'
+          onNewComment={handleNewComment}/>}
     </li>
   );
 }
