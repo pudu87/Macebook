@@ -13,3 +13,11 @@ export function transformKey(key) {
             .map(w => w[0].toUpperCase() + w.slice(1))
             .join(' ');
 }
+
+export function getPictureName(picture, name) {
+  if (picture[name] === null) {
+    return 'No File Selected';
+  } else {
+    return picture[name].name ? picture[name].name : `Current ${name}`;
+  }
+} 

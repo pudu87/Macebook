@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { fetchApi } from '../helpers/Fetching';
-import { getAvatarUrl, transformKey } from '../helpers/General'
+import { transformKey } from '../helpers/General'
 import EditProfile from '../subcomponents/EditProfile'
 
 function Profile(props) {
@@ -43,27 +43,22 @@ function Profile(props) {
   const profileList = Object.entries(profile).map(([key, value]) => {
     if (key === 'avatar') return false;
     return (
-      <li key={key} className={key}>
-        <span>{transformKey(key) + ': '}</span>
-        <span>{value}</span>
-      </li>
+      <tr key={key} className={key}>
+        <td>{transformKey(key) + ': '}</td>
+        <td>{value}</td>
+      </tr>
     );
   });
 
   const profileView = (
     <div id='profile-view'>
-      <div 
-        className='avatar'
-        style={{ backgroundImage: getAvatarUrl(profile.avatar) }}>
-      </div>
-      <ul>{profileList}</ul>
+      <table><tbody>{profileList}</tbody></table>
       <button onClick={changeView}>Change Profile</button>
     </div>
   );
 
   return (
     <div id="profile">
-      Profile
       {noFriend}
       {view ? 
         profileView :

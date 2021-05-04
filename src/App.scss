@@ -12,7 +12,7 @@ $nav-height: 100px;
 
 * {
   box-sizing: border-box;
-  font-family: 'Alegreya Sans';
+  font-family: 'Alegreya Sans', sans-serif;
   color: #333;
 }
 a {
@@ -34,7 +34,7 @@ ul {
   padding: .2em .5em;
   border: 2px solid #ccc;
   border-radius: 3px;
-  font-family: 'Source Code Pro';
+  font-family: 'Source Code Pro', monospace;
   text-transform: uppercase;
   font-size: 12px;
   font-weight: bold;
@@ -57,6 +57,43 @@ hr {
 }
 * {
   // border: 1px solid red;
+}
+
+// LOGIN AND SIGNUP
+
+#login,
+#signup {
+  padding-top: 25px;
+  form {
+    width: 75%;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid gainsboro;
+    border-radius: 3px;
+    background-color: #eee;
+  }
+  div {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    label {
+      min-width: 75px;
+    }
+    input {
+      flex: 1;
+    }
+  }
+  div:last-of-type {
+    margin-bottom: 15px;
+  }
+  a {
+    display: block;
+    text-decoration: underline;
+    font-size: 12px;
+    text-align: center;
+    color: rgb(80, 80, 255);
+  }
 }
 
 // NAVBAR
@@ -94,7 +131,7 @@ hr {
       position: absolute;
       bottom: 2px;
       padding-left: 20px;
-      font-family: 'Source Code Pro';
+      font-family: 'Source Code Pro', monospace;
       font-size: 12px;
     }
   }
@@ -105,12 +142,51 @@ hr {
     background-color: rgba(220, 220, 220, .4);
     a {
       text-align: center;
-      font-family: 'Source Code Pro';
+      font-family: 'Source Code Pro', monospace;
     }
   }
 }
 #navbar + * {
   margin: 0 2px;
+}
+
+// USER PAGE
+
+#user-header {
+  height: 75px;
+  margin: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  h2 {
+    margin-left: 10px;
+  }
+  .avatar {
+    margin-right: 10px;
+    width: 75px;
+    height: 75px;
+    border: 1px solid gainsboro;
+    border-radius: 2px;
+    background-size: cover;
+  }
+}
+#user-links {
+  margin: 5px 0;
+  display: flex;
+  
+  align-items: center;
+  background-color: #aaa;
+  li {
+    flex: 1;
+    text-align: center;
+  }
+  li:not(:last-child) {
+    border-right: 1px solid #bbb;
+  }
+  a {
+    color: white;
+    font-family: 'Source Code Pro', monospace;
+  }
 }
 
 // USER DISPLAY
@@ -234,7 +310,7 @@ hr {
     .show-replies {
       margin-left: auto;
       text-decoration: underline;
-      font-style: 'Source Code Pro';
+      font-style: 'Source Code Pro', monospace;
       font-size: 14px;
       color: #777;
     }
@@ -251,33 +327,6 @@ hr {
   border-radius: 3px;
 }
 
-// REPLY
-
-// .reply {
-//   color: rgb(115, 150, 106);
-//   border-left: 1px solid #999;
-// }
-
-// ----ORIGINAL SETTINGS------
-// AVATAR
-
-// .avatar {
-//   width: 75px;
-//   height: 75px;
-//   background-size: cover;
-//   border: 2px solid #555;
-// }
-
-// .post, 
-// .comment,
-// .friend {
-//   .avatar {
-//     width: 25px;
-//     height: 25px;
-//     border-width: 1px;
-//   }
-// }
-
 // PHOTO
 
 .photo {
@@ -285,4 +334,101 @@ hr {
   height: 50px;
   background-size: cover;
   border: 2px solid #555;
+}
+
+// PROFILE
+
+#profile-view,
+#profile-form {
+  margin: 0 5px;
+}
+#profile-view {
+  table {
+    margin-left: 15px;
+    margin-bottom: 15px;
+    border-collapse: collapse;
+    td {
+      padding: 5px;
+    }
+    tr:not(:last-child) {
+      td {
+      border-bottom: 1px solid gainsboro;
+      }
+    }
+    td:first-child {
+      min-width: 100px;
+    }
+    td:last-child {
+      font-style: italic;
+    }
+  }
+}
+#profile-edit {
+  > form,
+  > button {
+    margin-left: 15px;
+  }
+  form {
+    margin-right: 15px;
+    margin-bottom: 15px;
+    div {
+      height: 30px;
+      display: flex;
+      align-items: center;
+      padding-left: 5px;
+      label:first-of-type {
+        flex-basis: 100px;
+      }
+      input {
+        padding: 0;
+        flex: 1;
+        padding: 1px;
+        border: none;
+        border-bottom: 1px solid gainsboro;
+      }
+    }
+    .file-upload {
+      input {
+        display: none;
+      }
+      label:last-of-type {
+        @extend %button;
+      }
+      span {
+        margin-left: 5px;
+        font-size: 12px;
+      }
+    }
+    div:last-of-type {
+      margin-bottom: 5px;
+    }
+  }
+}
+
+// FRIENDS
+
+#friends {
+  margin-left: 5px;
+  padding-top: 5px;
+  .category {
+    margin-bottom: 5px;
+    > header {
+      display: inline-block;
+      font-family: 'Source Code Pro';
+      text-transform: capitalize;
+    }
+    ul {
+      padding-top: 5px;
+      border-top: 1px solid gainsboro;
+    }
+  }
+  .friend {
+    display: flex;
+    align-items: center;
+    .friend-request {
+      margin-right: 5px;
+      margin-left: auto;
+      font-size: 12px;
+    }
+  }
 }

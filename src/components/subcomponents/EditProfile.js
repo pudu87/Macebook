@@ -1,46 +1,56 @@
 import { useState } from 'react'
-import { transformKey } from '../helpers/General'
+import { transformKey, getPictureName } from '../helpers/General'
 
 function EditProfile(props) {
 
-  const [profile, setProfile] = useState(props.profile);
+  const [edit, setEdit] = useState(props.profile);
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (typeof profile.avatar === 'string') { 
-      const { avatar, ...profileWithoutAvatar } = profile;
-      props.onProfileChange(profileWithoutAvatar);
+    if (typeof edit.avatar === 'string') { 
+      const { avatar, ...editWithoutAvatar } = edit;
+      props.onProfileChange(editWithoutAvatar);
     } else {
-      props.onProfileChange(profile);
+      props.onProfileChange(edit);
     }
   }
 
   function handleChange(e) {
     if (e.target.type === 'file') {
-      setProfile({...profile, [e.target.name]: e.target.files[0]})
+      setEdit({...edit, [e.target.name]: e.target.files[0]})
     } else {
-      setProfile({...profile, [e.target.name]: e.target.value})
+      setEdit({...edit, [e.target.name]: e.target.value})
     }
   }
 
-  const formList = Object.keys(profile).map(key => {
-    const avatar = key === 'avatar';
+  const formList = Object.keys(edit).map(key => {
+    if (key === 'avatar') return false;
     return (
-      <label key={key}>{transformKey(key) + ': '}
+      <div key={key}>
+        <label>{transformKey(key) + ': '}</label>
         <input
-          type={avatar ? 'file' : 'text'}
+          type='text'
           name={key}
-          value={avatar ? undefined : profile[key]}
+          value={edit[key]}
           onChange={handleChange}/>
-      </label>
+      </div>
     )
   });
 
   return (
-    <div id="profileform">
-      ProfileForm
+    <div id="profile-edit">
       <form onSubmit={handleSubmit}>
         {formList}
+        <div className='file-upload'>
+          <label>Avatar:</label>
+          <input
+            type='file'
+            id='avatar'
+            name='avatar'
+            onChange={handleChange}/>
+          <label htmlFor='avatar'>Change</label>
+          <span>{getPictureName(edit, 'avatar')}</span>
+        </div>
         <input type='submit' value='Confirm Changes'/>
       </form>
       <button onClick={() => {props.onChangeView()}}>Back To View</button>

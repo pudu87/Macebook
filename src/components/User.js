@@ -47,7 +47,7 @@ function User() {
   }
 
   const headerTag = (
-    <header>
+    <header id='user-header'>
       <h2>{getFullName(header)}</h2>
       <div 
         className='avatar'
@@ -59,7 +59,7 @@ function User() {
   return (
     <div id="user">
       {headerTag}
-      <ul>
+      <ul id='user-links'>
         <li>
           <Link to={`${url}/`}>Messages</Link>
         </li>

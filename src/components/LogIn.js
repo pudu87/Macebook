@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from "react-router-dom"
 import { API_URL } from '../Constants'
 
 function Login() {
@@ -36,24 +37,29 @@ function Login() {
   return (
     <div id="login">
       <form onSubmit={handleLogin}>
-        <label htmlFor='email'>Email:</label>
-        <input 
-          type='email' 
-          id='email' 
-          name='email'
-          value={email} 
-          onChange={changeEmail}/>
-        <label htmlFor='password'>Password:</label>
-        <input 
-          type='password' 
-          id='password' 
-          name='password'
-          value={password} 
-          onChange={changePassword}/>
+        <div>
+          <label htmlFor='email'>Email:</label>
+          <input 
+            type='email' 
+            id='email' 
+            name='email'
+            value={email} 
+            onChange={changeEmail}/>
+        </div>
+        <div>
+          <label htmlFor='password'>Password:</label>
+          <input 
+            type='password' 
+            id='password' 
+            name='password'
+            value={password} 
+            onChange={changePassword}/>
+        </div>
         <input 
           type='submit' 
-          value='Confirm'/>
+          value='Log In'/>
       </form>
+      <Link to={'/signup'}>No account yet? Sign up here.</Link>
     </div>
   );
 }

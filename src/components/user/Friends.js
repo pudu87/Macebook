@@ -7,6 +7,12 @@ function Friends(props) {
 
   const userStatus = props.userStatus;
   const [friends, setFriends] = useState([]);
+  const [catView, setCatView] = useState({
+    confirmed: true, 
+    pending: true,
+    proposed: true,
+    possible: true
+  });
 
   const initFriends = useCallback(async () => {
     const path = '/friendships/' + userStatus.id;
@@ -32,7 +38,7 @@ function Friends(props) {
       method: false
     },
     possible: {
-      text: 'Send Request',
+      text: 'Request',
       method: 'POST'
     }
   };
@@ -56,12 +62,24 @@ function Friends(props) {
     });
   }
 
+  function handleCategoryView(category) {
+    setCatView({ 
+      ...catView, 
+      [category]: !catView[category] 
+    });
+  }
+
   const categoryList = Object.keys(friends).map(category => {
     return (
       !isEmpty(friends[category]) &&
-      <li key={category}>
-        {category}
-        <ul>{getFriendList(category)}</ul>
+      <li 
+        key={category}
+        className='category'>
+        <header onClick={() => handleCategoryView(category)}> 
+          <i className={'fas fa-chevron-' + (catView[category] ? 'down' : 'up')}></i>
+          &nbsp;{category}
+        </header>
+        {catView[category] && <ul>{getFriendList(category)}</ul>}
       </li>
     )
   });
@@ -82,14 +100,17 @@ function Friends(props) {
   }
 
   function renderButton(cat, id) {
-    return cat.method ?
-      <button onClick={() => handleRequest(cat.method, id)}>{cat.text}</button> :
-      <div>{cat.text}</div>
+    return (
+      <div className='friend-request'>
+        {cat.method ?
+        <button onClick={() => handleRequest(cat.method, id)}>{cat.text}</button> :
+        cat.text}
+      </div>
+    );
   }
 
   return (
     <div id="friends">
-      Friends
       <ul>{categoryList}</ul>
     </div>
   );

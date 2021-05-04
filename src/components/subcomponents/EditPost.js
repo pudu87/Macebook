@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { getPictureName } from '../helpers/General'
 
 function EditPost(props) {
 
@@ -32,14 +33,6 @@ function EditPost(props) {
     setEdit({...edit, photo: null});
   }
 
-  function getPhotoName() {
-    if (edit.photo === null) {
-      return 'No File Selected';
-    } else {
-      return edit.photo.name ? edit.photo.name : 'Current Photo';
-    }
-  } 
-
   return (
     <article className="edit-post">
       <form>
@@ -59,11 +52,11 @@ function EditPost(props) {
           <button onClick={removePhoto}>
             <i className="far fa-trash-alt"></i>
           </button>
-          <span>{getPhotoName()}</span>
+          <span>{getPictureName(edit, 'photo')}</span>
         </div>
         <input 
           type='submit' 
-          value='Post'
+          value='Edit'
           onClick={handleSubmit}/>
       </form>
   </article>

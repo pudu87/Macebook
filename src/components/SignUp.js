@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from "react-router-dom"
 import { API_URL } from '../Constants'
 
 function SignUp() {
@@ -38,24 +39,29 @@ function SignUp() {
   return (
     <div id="signup">
       <form onSubmit={handleSignup}>
-        <label htmlFor='email'>Email:</label>
-        <input 
-          type='email' 
-          id='email' 
-          name='email'
-          value={email} 
-          onChange={changeEmail}/>
-        <label htmlFor='password'>Password:</label>
-        <input 
-          type='password' 
-          id='password' 
-          name='password'
-          value={password} 
-          onChange={changePassword}/>
+        <div>
+          <label htmlFor='email'>Email:</label>
+          <input 
+            type='email' 
+            id='email' 
+            name='email'
+            value={email} 
+            onChange={changeEmail}/>
+        </div>
+        <div>
+          <label htmlFor='password'>Password:</label>
+          <input 
+            type='password' 
+            id='password' 
+            name='password'
+            value={password} 
+            onChange={changePassword}/>
+        </div>
         <input 
           type='submit' 
           value='Sign Up'/>
       </form>
+      <Link to={'/login'}>Have an account? Log in here.</Link>
     </div>
   );
 }
