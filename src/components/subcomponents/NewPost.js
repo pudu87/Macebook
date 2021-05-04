@@ -19,9 +19,9 @@ function NewPost(props) {
 
   function handleChange(e) {
     if (e.target.type === 'file') {
-      setPost({...post, [e.target.name]: e.target.files[0]})
+      setPost({...post, [e.target.name]: e.target.files[0]});
     } else {
-      setPost({...post, [e.target.name]: e.target.value})
+      setPost({...post, [e.target.name]: e.target.value});
     }
   }
 
@@ -31,28 +31,33 @@ function NewPost(props) {
   }
 
   return (
-    <div id="newpost">
-      New Post
+    <article id="new-post">
       <form>
-        <input 
-          type='textarea' 
+        <textarea
           className='content'
           name='content'
           value={post.content}
-          onChange={handleChange}/>
-        <label>Add photo: 
-          <input
-            type='file'
-            name='photo'
-            onChange={handleChange}/>
-            <button onClick={removePhoto}>Remove photo</button>
-        </label>
+          placeholder='Add a new Post here...'
+          onChange={handleChange}>
+        </textarea>
+        <div className='file-upload'>
+          <label><i className="far fa-file-image"></i>
+            <input
+              type='file'
+              name='photo'
+              onChange={handleChange}/>
+          </label>
+          <button onClick={removePhoto}>
+            <i className="far fa-trash-alt"></i>
+          </button>
+          <span>{post.photo ? post.photo.name : 'No File Selected'}</span>
+        </div>
         <input 
           type='submit' 
           value='Post'
           onClick={handleSubmit}/>
       </form>
-    </div>
+    </article>
   );
 }
 

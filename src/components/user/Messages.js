@@ -56,20 +56,21 @@ function Messages(props) {
   const noFriend = !userStatus.isFriend && !userStatus.isCurrentUser &&
     <div>Befriend this user if you want to see more</div>;
 
-  const postList = posts.map(post => {
-    return <Post 
-      key={post.id} 
-      post={post}
-      currentUserId={userStatus.currentUserId}
-      onUpdateCommentCounter={handleUpdateCommentCounter}
-      onUpdateLikeCounter={handleUpdateLikeCounter}
-      onEditPost={handleEditPost}
-      onDeletePost={handleDeletePost}/>
+  const postList = posts.map((post, index) => {
+    return <div key={post.id}>
+      {(index !== 0 || userStatus.isCurrentUser) && <hr/>}
+      <Post 
+        post={post}
+        currentUserId={userStatus.currentUserId}
+        onUpdateCommentCounter={handleUpdateCommentCounter}
+        onUpdateLikeCounter={handleUpdateLikeCounter}
+        onEditPost={handleEditPost}
+        onDeletePost={handleDeletePost}/>
+      </div>
   });
 
   return (
     <div id="messages">
-      Messages
       {newPost}
       {noFriend}
       {postList}

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { fetchApi } from '../helpers/Fetching'
+import ReactTimeAgo from 'react-time-ago'
 import NewComment from './NewComment'
 import EditComment from './EditComment'
 import UserDisplay from './UserDisplay'
@@ -100,35 +101,44 @@ function Comment(props) {
   );
 
   const attributeList = (
-    <ul>
-      <li>#Likes: {comment.likes_count}</li>
+    <ul className='attributes'>
+      <li className='likes-counter'>
+        <i className='far fa-thumbs-up'></i> {comment.likes_count}
+      </li>
       {parent === 'Post' &&
-        <li>#Replies: {comment.comments_count}</li>}
-      <li>Date: {comment.created_at}</li>
+        <li className='comments-counter'>
+          <i className="far fa-comment"></i> {comment.comments_count}
+        </li>}
+      <li className='date'>
+        <ReactTimeAgo date={new Date(comment.created_at)}/>
+      </li>
     </ul>
   );
 
   const optionList = (
     <div className='buttons'>
+      <button 
+        className='like'
+        onClick={() => { comment.like_id ? unlike() : like() }}>
+        <i className={'fas fa-thumbs-up ' + (comment.like_id ? 'liked' : 'unliked')}></i>
+      </button>
       {currentUserId === comment.user_id &&
         <button 
           className='toggle-edit-comment'
           onClick={() => {setEdit(!edit)}}>
-          {edit ? 'Undo' : 'Edit'}</button>}
+          <i className={'fas fa-' + (edit ? 'undo' : 'edit')}></i>
+        </button>}
       {currentUserId === comment.user_id &&
         <button 
           className='delete-comment'
-          onClick={handleDeleteComment}>X</button>}
-      {comment.comments_count > 0 &&
-        <button 
+          onClick={handleDeleteComment}>
+          <i className="far fa-trash-alt"></i>
+        </button>}
+      {comment.comments_count > 0 && 
+        <span 
           className='show-replies'
           onClick={showReplies}>
-          {repliesView ? 'Hide Replies' : 'Show Replies'}</button>}
-      <button 
-        className='like'
-        onClick={() => { comment.like_id ? unlike() : like() }}>
-        {comment.like_id ? 'Unlike' : 'Like'}
-      </button>
+          {repliesView ? 'Hide Replies' : 'Show Replies'}</span>}
     </div>
   );
 

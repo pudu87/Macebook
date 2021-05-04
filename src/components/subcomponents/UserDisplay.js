@@ -5,13 +5,17 @@ function UserDisplay(props) {
   const data = props.data;
 
   return (
-    <article className="user-display">
+    <header className="user-display">
       <div 
         className='avatar'
         style={{ backgroundImage: getAvatarUrl(data.profile.avatar) }}>
       </div>
-      <Link to={`/${data.user_id}`}>{getFullName(data.profile)}</Link>
-    </article>
+      <Link 
+        to={`/${data.user_id}`}
+        className='user-name'>
+        {getFullName(data.profile)}
+      </Link>
+    </header>
   );
 }
 

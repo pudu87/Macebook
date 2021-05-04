@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { fetchApi } from '../helpers/Fetching'
+import ReactTimeAgo from 'react-time-ago'
 import EditPost from './EditPost'
 import Comment from './Comment'
 import NewComment from './NewComment'
 import UserDisplay from './UserDisplay'
+
 
 function Post(props) {
 
@@ -98,33 +100,43 @@ function Post(props) {
   );
 
   const attributeList = (
-    <ul>
-      <li>#Likes: {post.likes_count}</li>
-      <li>#Comments: {post.comments_count}</li>
-      <li>Date: {post.created_at}</li>
+    <ul className='attributes'>
+      <li className='likes-counter'>
+        <i className='far fa-thumbs-up'></i> {post.likes_count}
+      </li>
+      <li className='comments-counter'>
+        <i className="far fa-comment"></i> {post.comments_count}
+      </li>
+      <li className='date'>
+        <ReactTimeAgo date={new Date(post.created_at)}/>
+      </li>
     </ul>
   );
 
   const optionList = (
     <div className='buttons'>
-      {currentUserId === post.user_id &&
-        <button 
-          className='toggle-edit-post'
-          onClick={() => {setEdit(!edit)}}>{edit ? 'Undo' : 'Edit'}</button>}
-      {currentUserId === post.user_id &&
-        <button 
-          className='delete-post'
-          onClick={() => {props.onDeletePost(post.id)}}>X</button>}
-      {post.comments_count > 0 && 
-        <button 
-          className='show-comments'
-          onClick={showComments}>
-          {commentsView ? 'Hide Comments' : 'Show Comments'}</button>}
       <button 
         className='like'
         onClick={() => { post.like_id ? unlike() : like() }}>
-        {post.like_id ? 'Unlike' : 'Like'}
+        <i className={'fas fa-thumbs-up ' + (post.like_id ? 'liked' : 'unliked')}></i>
       </button>
+      {currentUserId === post.user_id &&
+        <button 
+          className='toggle-edit-post'
+          onClick={() => {setEdit(!edit)}}>
+          <i className={'fas fa-' + (edit ? 'undo' : 'edit')}></i>
+        </button>}
+      {currentUserId === post.user_id &&
+        <button 
+          className='delete-post'
+          onClick={() => {props.onDeletePost(post.id)}}>
+          <i className="far fa-trash-alt"></i>
+        </button>}
+      {post.comments_count > 0 && 
+        <span 
+          className='show-comments'
+          onClick={showComments}>
+          {commentsView ? 'Hide Comments' : 'Show Comments...'}</span>}
     </div>
   );
 

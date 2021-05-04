@@ -17,22 +17,21 @@ function EditComment(props) {
     setEdit({...edit, [e.target.name]: e.target.value});
   }
 
-  const title = props.parent === 'Post' ? 'Comment' : 'Reply';
-
   return (
     <div className="edit-comment">
-      Edit {title}
       <form>
-        <input 
-          type='textarea' 
+        <textarea
           className='content'
           name='content'
           value={edit.content}
-          onChange={handleChange}/>
-        <input 
-          type='submit' 
-          value='Edit'
-          onClick={handleSubmit}/>
+          onChange={handleChange}>
+        </textarea>
+        <div>
+          <input 
+            type='submit' 
+            value='Edit'
+            onClick={handleSubmit}/>
+        </div>
       </form>
     </div>
   );

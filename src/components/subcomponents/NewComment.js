@@ -22,18 +22,19 @@ function NewComment(props) {
 
   return (
     <div className="new-comment">
-      New {title}
       <form onSubmit={handleSubmit}>
-        <input 
-          type='textarea' 
+        <textarea
           className='content'
           name='content'
           value={comment.content}
-          onChange={handleChange}
-          placeholder={`Add a new ${title} here...`}/>
-        <input 
-          type='submit' 
-          value={title}/>
+          placeholder={`Add a new ${title} here...`}
+          onChange={handleChange}>
+        </textarea>
+        <div>
+          <input 
+            type='submit' 
+            value={title}/>
+        </div>
       </form>
     </div>
   );

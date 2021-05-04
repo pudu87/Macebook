@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import { API_URL } from '../Constants'
+import Mace from '../images/mace.png'
 
 function NavBar() {
 
@@ -25,13 +26,26 @@ function NavBar() {
       .catch(err => console.error(err))
   }
 
+  const logo = (
+    <div 
+      className='logo'
+      style={{ backgroundImage: `url(${Mace})` }}>
+    </div>
+  );
+
   return (
     <div id="navbar">
-      Navbar
-      <Link to={'/'}>Home</Link>
-      <Link to={'/login'}>LogIn</Link>
-      <Link to={'/signup'}>SignUp</Link>
-      <Link to={'/login'} onClick={handleLogout}>LogOut</Link>
+      <header>
+        <h1 className='macebook'>Macebook</h1>
+        {logo}
+        <p>a Very Medieval Social Network</p>
+      </header>
+      <nav>
+        <Link to={'/'}>Home</Link>
+        <Link to={'/login'}>LogIn</Link>
+        <Link to={'/signup'}>SignUp</Link>
+        <Link to={'/login'} onClick={handleLogout}>LogOut</Link>
+      </nav>
     </div>
   );
 }

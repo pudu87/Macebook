@@ -1,39 +1,282 @@
+// IMPORTS
+
+@import url('https://fonts.googleapis.com/css2?family=New+Rocker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@200;400;700&display=swap');
+
 // CONSTANTS
 
-$nav-height: 80px;
+$nav-height: 100px;
 
 // GENERAL
 
 * {
   box-sizing: border-box;
+  font-family: 'Alegreya Sans';
+  color: #333;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+p {
+  margin: 0;
+}
+ul {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+  li {
+    list-style: none;
+  }
+}
+%button {
+  padding: .2em .5em;
+  border: 2px solid #ccc;
+  border-radius: 3px;
+  font-family: 'Source Code Pro';
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
+  background-color: rgba(220, 220, 220, .4);
+}
+button,
+input[type=submit] {
+  @extend %button;
+}
+hr {
+  border: none;
+  border-top: 1px solid #999;
+  height: 1px;
+}
+.liked { 
+  color: #aaa;
+}
+.unliked {
+  color: #333;
+}
+* {
+  // border: 1px solid red;
 }
 
 // NAVBAR
 
 #navbar {
   height: $nav-height;
+  margin-bottom: 5px;
+  display: grid;
+  grid-template-rows: 70px 30px;
   width: 100%;
-  border-bottom: 1px solid #555;
-}
-
-// AVATAR
-
-.avatar {
-  width: 75px;
-  height: 75px;
-  background-size: cover;
-  border: 2px solid #555;
-}
-
-.post, 
-.comment,
-.friend {
-  .avatar {
-    width: 25px;
-    height: 25px;
-    border-width: 1px;
+  border-bottom: 1px solid #aaa;
+  header {
+    position: relative;
+    padding: 0 2px;
+    background-color: gainsboro;
+    border-bottom: 1px solid #ddd;
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      font-family: 'New Rocker', cursive;
+      text-align: center;
+    }
+    .logo {
+      position: absolute;
+      top: 10px; 
+      height: 60px;
+      left: 0;
+      right: 0;
+      transform: scaleY(.7);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
+    }
+    p {
+      position: absolute;
+      bottom: 2px;
+      padding-left: 20px;
+      font-family: 'Source Code Pro';
+      font-size: 12px;
+    }
+  }
+  nav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: center;
+    background-color: rgba(220, 220, 220, .4);
+    a {
+      text-align: center;
+      font-family: 'Source Code Pro';
+    }
   }
 }
+#navbar + * {
+  margin: 0 2px;
+}
+
+// USER DISPLAY
+
+.user-display {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  .avatar {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #bbb;
+    border-radius: 50%;
+    background-size: cover;
+  }
+  .user-name {
+    margin-left: 10px;
+    font-weight: bold;
+  }
+}
+
+// NEW POST & NEW COMMENT
+
+#new-post,
+.new-comment,
+.edit-post,
+.edit-comment {
+  textarea {
+    border-radius: 2px;
+    border: 1px solid #ddd;
+    resize: none;
+  }
+}
+#new-post,
+.edit-post {
+  form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    textarea {
+      grid-column: 1 / span 2;
+      height: 50px;
+    }
+    label {
+      @extend %button;
+    }
+    input[type=file] {
+      display: none;
+    }
+    span {
+      margin-left: 5px;
+      font-size: 12px;
+    }
+    button {
+      margin-left: 5px;
+    }
+    input[type=submit] {
+      margin-left: auto;
+    }
+  }
+}
+.new-comment,
+.edit-comment {
+  form {
+    display: flex;
+    textarea {
+      flex: auto;
+      height: 36px;
+      font-size: 14px;
+    }
+    div {
+      display: flex;
+      justify-content: flex-end;
+      input[type=submit] {
+        flex: 0;
+        align-self: flex-end;
+        margin-left: 5px;
+      }
+    }
+  }
+}
+
+// POST
+
+.post,
+#new-post {
+  margin: 5px 0;
+  margin-right: 5px;
+  border: 2px solid #eee;
+  border-radius: 3px;
+  background-color: rgb(245, 245, 245);
+}
+
+// POST & COMMENT
+
+.post,
+.comment {
+  .content {
+    background-color: rgb(252, 252, 252);
+  }
+  .attributes {
+    display: flex;
+    .likes-counter,
+    .comments-counter {
+      width: 60px;
+    }
+    .date {
+      margin-left: auto;
+      font-size: 12px;
+      font-style: italic;
+    }
+  }
+  > *:not(:first-child):not(:last-child) {
+    margin-bottom: 3px;
+  }
+  .buttons {
+    display: flex;
+    >*:not(:last-child) {
+      margin-right: 5px;
+    }
+    .show-comments,
+    .show-replies {
+      margin-left: auto;
+      text-decoration: underline;
+      font-style: 'Source Code Pro';
+      font-size: 14px;
+      color: #777;
+    }
+  }
+}
+
+// COMMENT
+
+.comment {
+  margin-left: 15px;
+  padding-left: 5px;
+  border-left: 2px solid gainsboro;
+  border-top: 2px solid gainsboro;
+  border-radius: 3px;
+}
+
+// REPLY
+
+// .reply {
+//   color: rgb(115, 150, 106);
+//   border-left: 1px solid #999;
+// }
+
+// ----ORIGINAL SETTINGS------
+// AVATAR
+
+// .avatar {
+//   width: 75px;
+//   height: 75px;
+//   background-size: cover;
+//   border: 2px solid #555;
+// }
+
+// .post, 
+// .comment,
+// .friend {
+//   .avatar {
+//     width: 25px;
+//     height: 25px;
+//     border-width: 1px;
+//   }
+// }
 
 // PHOTO
 
@@ -42,20 +285,4 @@ $nav-height: 80px;
   height: 50px;
   background-size: cover;
   border: 2px solid #555;
-}
-
-// COMMENT
-
-.comment {
-  margin-left: 20px;
-  color: rgb(116, 74, 74);
-  border-left: 1px solid #777;
-}
-
-// REPLY
-
-.reply {
-  margin-left: 50px;
-  color: rgb(115, 150, 106);
-  border-left: 1px solid #999;
 }

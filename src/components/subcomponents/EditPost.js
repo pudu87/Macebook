@@ -24,7 +24,7 @@ function EditPost(props) {
       setEdit({...edit, [e.target.name]: e.target.files[0]});
     } else {
       setEdit({...edit, [e.target.name]: e.target.value});
-    }
+    } console.log(edit)
   }
 
   function removePhoto(e) {
@@ -32,29 +32,41 @@ function EditPost(props) {
     setEdit({...edit, photo: null});
   }
 
+  function getPhotoName() {
+    if (edit.photo === null) {
+      return 'No File Selected';
+    } else {
+      return edit.photo.name ? edit.photo.name : 'Current Photo';
+    }
+  } 
+
   return (
-    <div className="edit-post">
-      Edit Post
+    <article className="edit-post">
       <form>
-        <input 
-          type='textarea' 
+        <textarea
           className='content'
           name='content'
           value={edit.content}
-          onChange={handleChange}/>
-        <label>Change photo: 
-          <input
-            type='file'
-            name='photo'
-            onChange={handleChange}/>
-            <button onClick={removePhoto}>Remove photo</button>
-        </label>
+          onChange={handleChange}>
+        </textarea>
+        <div className='file-upload'>
+          <label><i className="far fa-file-image"></i>
+            <input
+              type='file'
+              name='photo'
+              onChange={handleChange}/>
+          </label>
+          <button onClick={removePhoto}>
+            <i className="far fa-trash-alt"></i>
+          </button>
+          <span>{getPhotoName()}</span>
+        </div>
         <input 
           type='submit' 
-          value='Edit'
+          value='Post'
           onClick={handleSubmit}/>
       </form>
-    </div>
+  </article>
   );
 }
 
