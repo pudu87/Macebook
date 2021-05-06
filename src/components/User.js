@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Switch, Route, Link, useRouteMatch, useParams } from "react-router-dom"
+import { Switch, Route, NavLink, useRouteMatch, useParams } from "react-router-dom"
 import { getFullName, getAvatarUrl } from "./helpers/General";
 import { fetchApi } from './helpers/Fetching';
 import isEqual from 'lodash/isEqual'
@@ -61,13 +61,25 @@ function User() {
       {headerTag}
       <ul id='user-links'>
         <li>
-          <Link to={`${url}/`}>Messages</Link>
+          <NavLink 
+            exact to={`${url}/`} 
+            activeClassName='active'>
+            Messages
+          </NavLink>
         </li>
         <li>
-          <Link to={`${url}/profile`}>Profile</Link>
+          <NavLink 
+            to={`${url}/profile`}
+            activeClassName='active'>
+            Profile
+          </NavLink>
         </li>
         <li>
-          <Link to={`${url}/friends`}>Friends</Link>
+          <NavLink 
+            to={`${url}/friends`}
+            activeClassName='active'>
+            Friends
+          </NavLink>
         </li>
       </ul>
       <Switch>
