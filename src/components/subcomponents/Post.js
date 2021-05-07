@@ -91,10 +91,9 @@ function Post(props) {
   const postView = (
     <div className='post-view'>
       {post.photo && 
-        <div 
+        <img 
           className='photo'
-          style={{ backgroundImage: `url(${post.photo})` }}>
-        </div>}
+          src={post.photo} />}
       <p className='content'>{post.content}</p>
     </div>
   );
