@@ -106,7 +106,9 @@ function Comment(props) {
         <i className='far fa-thumbs-up'></i> {comment.likes_count}
       </li>
       {parent === 'Post' &&
-        <li className='comments-counter'>
+        <li 
+          className='comments-counter'
+          onClick={comment.comments_count > 0 ? showReplies : undefined}>
           <i className="far fa-comment"></i> {comment.comments_count}
         </li>}
       <li className='date'>
@@ -134,11 +136,6 @@ function Comment(props) {
           onClick={handleDeleteComment}>
           <i className="far fa-trash-alt"></i>
         </button>}
-      {comment.comments_count > 0 && 
-        <span 
-          className='show-replies'
-          onClick={showReplies}>
-          {repliesView ? 'Hide Replies' : 'Show Replies'}</span>}
     </div>
   );
 

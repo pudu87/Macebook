@@ -93,7 +93,8 @@ function Post(props) {
       {post.photo && 
         <img 
           className='photo'
-          src={post.photo} />}
+          src={post.photo} 
+          alt={post.photo.split('/').pop().split('.')[0]}/>}
       <p className='content'>{post.content}</p>
     </div>
   );
@@ -103,7 +104,9 @@ function Post(props) {
       <li className='likes-counter'>
         <i className='far fa-thumbs-up'></i> {post.likes_count}
       </li>
-      <li className='comments-counter'>
+      <li 
+        className='comments-counter'
+        onClick={post.comments_count > 0 ? showComments : undefined}>
         <i className="far fa-comment"></i> {post.comments_count}
       </li>
       <li className='date'>
@@ -114,11 +117,6 @@ function Post(props) {
 
   const optionList = (
     <div className='buttons'>
-      <button 
-        className='like'
-        onClick={() => { post.like_id ? unlike() : like() }}>
-        <i className={'fas fa-thumbs-up ' + (post.like_id ? 'liked' : 'unliked')}></i>
-      </button>
       {currentUserId === post.user_id &&
         <button 
           className='toggle-edit-post'
@@ -131,11 +129,11 @@ function Post(props) {
           onClick={() => {props.onDeletePost(post.id)}}>
           <i className="far fa-trash-alt"></i>
         </button>}
-      {post.comments_count > 0 && 
-        <span 
-          className='show-comments'
-          onClick={showComments}>
-          {commentsView ? 'Hide Comments' : 'Show Comments...'}</span>}
+      <button 
+        className='like'
+        onClick={() => { post.like_id ? unlike() : like() }}>
+        <i className={'fas fa-thumbs-up ' + (post.like_id ? 'liked' : 'unliked')}></i>
+      </button>
     </div>
   );
 

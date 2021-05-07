@@ -292,6 +292,7 @@ hr {
 
 .post,
 .comment {
+  position: relative;
   .content {
     background-color: rgb(252, 252, 252);
   }
@@ -315,6 +316,9 @@ hr {
     margin-bottom: 3px;
   }
   .buttons {
+    position: absolute;
+    top: 3px;
+    right: 3px;
     display: flex;
     >*:not(:last-child) {
       margin-right: 5px;
