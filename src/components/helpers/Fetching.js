@@ -30,6 +30,7 @@ export async function fetchApi(path, method, data) {
   }
   const requestOptions = getRequestOptions(method, data);
   const response = await fetch(API_URL + path, requestOptions);
+  if (response.status === 401) return false;
   if (method !== 'DELETE' || resource === 'friendships') { 
     return await response.json();
   }

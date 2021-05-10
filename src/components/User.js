@@ -55,45 +55,44 @@ function User() {
       </div>
     </header>
   );
-
   return (
-    <div id="user">
-      {headerTag}
-      <ul id='user-links'>
-        <li>
-          <NavLink 
-            exact to={`${url}/`} 
-            activeClassName='active'>
-            Messages
-          </NavLink>
-        </li>
-        <li>
-          <NavLink 
-            to={`${url}/profile`}
-            activeClassName='active'>
-            Profile
-          </NavLink>
-        </li>
-        <li>
-          <NavLink 
-            to={`${url}/friends`}
-            activeClassName='active'>
-            Friends
-          </NavLink>
-        </li>
-      </ul>
-      <Switch>
-        <Route exact path={path} render={() => (
-          <Messages userStatus={userStatus}/>
-        )}/>
-        <Route exact path={`${path}/profile`} render={() => (
-          <Profile userStatus={userStatus} onProfileUpdate={updateHeader}/>
-        )}/>
-        <Route exact path={`${path}/friends`} render={() => (
-          <Friends userStatus={userStatus}/>
-        )}/>
-      </Switch>
-    </div>
+      <div id="user">
+        {headerTag}
+        <ul id='user-links'>
+          <li>
+            <NavLink 
+              exact to={`${url}/`} 
+              activeClassName='active'>
+              Messages
+            </NavLink>
+          </li>
+          <li>
+            <NavLink 
+              to={`${url}/profile`}
+              activeClassName='active'>
+              Profile
+            </NavLink>
+          </li>
+          <li>
+            <NavLink 
+              to={`${url}/friends`}
+              activeClassName='active'>
+              Friends
+            </NavLink>
+          </li>
+        </ul>
+        <Switch>
+          <Route exact path={path} render={() => (
+            <Messages userStatus={userStatus}/>
+          )}/>
+          <Route exact path={`${path}/profile`} render={() => (
+            <Profile userStatus={userStatus} onProfileUpdate={updateHeader}/>
+          )}/>
+          <Route exact path={`${path}/friends`} render={() => (
+            <Friends userStatus={userStatus}/>
+          )}/>
+        </Switch>
+      </div>
   );
 }
 

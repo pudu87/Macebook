@@ -2,9 +2,9 @@ import { Link } from "react-router-dom"
 import { API_URL } from '../Constants'
 import Mace from '../images/mace.png'
 
-function NavBar() {
+function NavBar(props) {
 
-  function handleLogout() {
+  async function handleLogout() {
     const requestOptions = {
       method: 'DELETE',
       headers: { 
@@ -15,15 +15,14 @@ function NavBar() {
     fetch(API_URL + '/logout', requestOptions) 
       .then(response => {
         if(response.ok) {
-          return response.json()
+          props.onLogout();
+          return response.json();
         } else {
-          return response.json().then(json => Promise.reject(json))
+          return response.json().then(json => Promise.reject(json));
         }
       })
-      .then(json => {
-        console.dir(json)
-      })
-      .catch(err => console.error(err))
+      .then(json => console.dir(json))
+      .catch(err => console.error(err));
   }
 
   const logo = (
@@ -41,10 +40,11 @@ function NavBar() {
         <p>a Very Medieval Social Network</p>
       </header>
       <nav>
-        <Link to={'/'}>Home</Link>
-        <Link to={'/login'}>LogIn</Link>
-        <Link to={'/signup'}>SignUp</Link>
-        <Link to={'/login'} onClick={handleLogout}>LogOut</Link>
+        <div><Link to={'/'}>Home</Link></div>
+        <div><Link to={'/' + props.userId}>My Page</Link></div>
+        <div><Link to={'/login'} onClick={handleLogout}>
+          <i className="fas fa-sign-out-alt"></i>
+        </Link></div>
       </nav>
     </div>
   );

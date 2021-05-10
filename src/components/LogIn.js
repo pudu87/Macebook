@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Link } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 import { API_URL } from '../Constants'
 
-function Login() {
+function Login(props) {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const history = useHistory();
 
   function changeEmail(e) {
     setEmail(e.target.value);
@@ -15,23 +16,25 @@ function Login() {
     setPassword(e.target.value);
   }
 
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault();
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ user: { email: email, password: password }})
     }
-    fetch(API_URL + '/login', requestOptions)
-      .then(response => {
-        if (response.ok) {
-          console.log(response.headers.get('Authorization'));
-          localStorage.setItem('token', response.headers.get('Authorization'));
-          return response.json();
-        }
-      })
-      .then(json => console.dir(json))
-      .catch(err => console.error(err))
+    try {
+      const response = await fetch(API_URL + '/login', requestOptions);
+      if (response.ok) {
+        localStorage.setItem('token', response.headers.get('Authorization'));
+        await props.onLogin();
+        const json = await response.json();
+        history.push('/');
+        console.dir(json);
+      }
+    } catch(err) {
+      console.error(err);
+    }
   }
 
   return (

@@ -102,12 +102,14 @@ function Post(props) {
   const attributeList = (
     <ul className='attributes'>
       <li className='likes-counter'>
-        <i className='far fa-thumbs-up'></i> {post.likes_count}
+        <span>
+          <i className='far fa-thumbs-up'></i> {post.likes_count}
+        </span>
       </li>
-      <li 
-        className='comments-counter'
-        onClick={post.comments_count > 0 ? showComments : undefined}>
-        <i className="far fa-comment"></i> {post.comments_count}
+      <li className='comments-counter'>
+        <span onClick={post.comments_count > 0 ? showComments : undefined}>
+          <i className="far fa-comment"></i> {post.comments_count}
+        </span>
       </li>
       <li className='date'>
         <ReactTimeAgo date={new Date(post.created_at)}/>

@@ -119,11 +119,6 @@ function Comment(props) {
 
   const optionList = (
     <div className='buttons'>
-      <button 
-        className='like'
-        onClick={() => { comment.like_id ? unlike() : like() }}>
-        <i className={'fas fa-thumbs-up ' + (comment.like_id ? 'liked' : 'unliked')}></i>
-      </button>
       {currentUserId === comment.user_id &&
         <button 
           className='toggle-edit-comment'
@@ -136,6 +131,11 @@ function Comment(props) {
           onClick={handleDeleteComment}>
           <i className="far fa-trash-alt"></i>
         </button>}
+      <button 
+        className='like'
+        onClick={() => { comment.like_id ? unlike() : like() }}>
+        <i className={'fas fa-thumbs-up ' + (comment.like_id ? 'liked' : 'unliked')}></i>
+      </button>
     </div>
   );
 

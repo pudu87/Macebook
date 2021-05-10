@@ -137,11 +137,15 @@ hr {
   }
   nav {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
     background-color: rgba(220, 220, 220, .4);
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     a {
-      text-align: center;
       font-family: 'Source Code Pro', monospace;
     }
   }
