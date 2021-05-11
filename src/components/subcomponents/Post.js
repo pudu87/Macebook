@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { fetchApi } from '../helpers/Fetching'
-import ReactTimeAgo from 'react-time-ago'
 import EditPost from './EditPost'
 import Comment from './Comment'
 import NewComment from './NewComment'
 import UserDisplay from './UserDisplay'
+import AttributeList from './AttributeList'
+import OptionList from './OptionList'
 
 
 function Post(props) {
@@ -14,12 +15,20 @@ function Post(props) {
   const [commentsView, setCommentsView] = useState(false);
   const [edit, setEdit] = useState(false);
 
+  function handleToggleEdit() {
+    setEdit(!edit);
+  }
+
   function handleEditPost(edit) {
     props.onEditPost(edit, post.id);
     setEdit(!edit);
   }
 
-  async function showComments() {
+  function handleDeletePost() {
+    props.onDeletePost(post.id);
+  }
+
+  async function handleShowComments() {
     if (comments.length === 0) {
       const path = '/comments/P' + post.id;
       const newComments = await fetchApi(path, 'GET');
@@ -34,7 +43,7 @@ function Post(props) {
     const newComment = await fetchApi('/comments', 'POST', data);
     setComments([...comments, newComment]);
     props.onUpdateCommentCounter(post.id, 1);
-    if (!commentsView) showComments();
+    if (!commentsView) handleShowComments();
   }
 
   async function handleEditComment(comment, id) {
@@ -67,7 +76,7 @@ function Post(props) {
     }));
   }
 
-  async function like() {
+  async function handleLike() {
     const data = {
       likeable_id: post.id,
       likeable_type: 'Post'
@@ -76,7 +85,7 @@ function Post(props) {
     props.onUpdateLikeCounter(post.id, newLike.id);
   }
 
-  async function unlike() {
+  async function handleUnlike() {
     const path = '/likes/' + post.like_id;
     await fetchApi(path, 'DELETE');
     props.onUpdateLikeCounter(post.id, false);
@@ -99,46 +108,6 @@ function Post(props) {
     </div>
   );
 
-  const attributeList = (
-    <ul className='attributes'>
-      <li className='likes-counter'>
-        <span>
-          <i className='far fa-thumbs-up'></i> {post.likes_count}
-        </span>
-      </li>
-      <li className='comments-counter'>
-        <span onClick={post.comments_count > 0 ? showComments : undefined}>
-          <i className="far fa-comment"></i> {post.comments_count}
-        </span>
-      </li>
-      <li className='date'>
-        <ReactTimeAgo date={new Date(post.created_at)}/>
-      </li>
-    </ul>
-  );
-
-  const optionList = (
-    <div className='buttons'>
-      {currentUserId === post.user_id &&
-        <button 
-          className='toggle-edit-post'
-          onClick={() => {setEdit(!edit)}}>
-          <i className={'fas fa-' + (edit ? 'undo' : 'edit')}></i>
-        </button>}
-      {currentUserId === post.user_id &&
-        <button 
-          className='delete-post'
-          onClick={() => {props.onDeletePost(post.id)}}>
-          <i className="far fa-trash-alt"></i>
-        </button>}
-      <button 
-        className='like'
-        onClick={() => { post.like_id ? unlike() : like() }}>
-        <i className={'fas fa-thumbs-up ' + (post.like_id ? 'liked' : 'unliked')}></i>
-      </button>
-    </div>
-  );
-
   const commentList = comments.map(comment => {
     return <Comment 
       key={comment.id} 
@@ -155,8 +124,20 @@ function Post(props) {
     <article className="post">
       <UserDisplay data={post}/>
       {edit ? postForm : postView}
-      {attributeList}
-      {optionList}
+      <AttributeList
+        likesCount={post.likes_count}
+        commentsCount={post.comments_count}
+        date={post.created_at}
+        onShowChildren={handleShowComments}/>
+      <OptionList
+        entity={'post'}
+        edit={edit}
+        editable={currentUserId === post.user_id}
+        likeable={post.like_id}
+        onToggleEdit={handleToggleEdit}
+        onDelete={handleDeletePost}
+        onLike={handleLike}
+        onUnlike={handleUnlike}/>
       {commentsView && <ul>{commentList}</ul>}
       <NewComment 
         parent='Post'

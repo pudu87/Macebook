@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { fetchApi } from '../helpers/Fetching'
-import ReactTimeAgo from 'react-time-ago'
 import NewComment from './NewComment'
 import EditComment from './EditComment'
 import UserDisplay from './UserDisplay'
+import AttributeList from './AttributeList'
+import OptionList from './OptionList'
 
 function Comment(props) {
 
@@ -12,7 +13,7 @@ function Comment(props) {
   const [repliesView, setRepliesView] = useState(false);
   const [edit, setEdit] = useState(false);
 
-  async function showReplies() {
+  async function handleShowReplies() {
     if (replies.length === 0) {
       const path = '/comments/C' + comment.id;
       const newReplies = await fetchApi(path, 'GET');
@@ -21,13 +22,17 @@ function Comment(props) {
     setRepliesView(!repliesView);
   }
 
+  function handleToggleEdit() {
+    setEdit(!edit);
+  }
+
   async function handleNewComment(data) {
     data.commentable_id = comment.id;
     data.commentable_type = 'Comment';
     const newComment = await fetchApi('/comments', 'POST', data);
     setReplies([...replies, newComment]);
     props.onUpdateCommentCounter(newComment.commentable_id, 1);
-    if (!repliesView) showReplies();
+    if (!repliesView) handleShowReplies();
   }
 
   async function handleEditComment(edit, id) {
@@ -72,7 +77,7 @@ function Comment(props) {
     }));
   }
 
-  async function like() {
+  async function handleLike() {
     const data = {
       likeable_id: comment.id,
       likeable_type: 'Comment'
@@ -81,7 +86,7 @@ function Comment(props) {
     props.onUpdateLikeCounter(comment.id, newLike.id);
   }
 
-  async function unlike() {
+  async function handleUnlike() {
     const path = '/likes/' + comment.like_id;
     await fetchApi(path, 'DELETE');
     props.onUpdateLikeCounter(comment.id, false);
@@ -97,45 +102,6 @@ function Comment(props) {
   const commentView = (
     <div className='comment-view'>
       <p className='content'>{comment.content}</p>
-    </div>
-  );
-
-  const attributeList = (
-    <ul className='attributes'>
-      <li className='likes-counter'>
-        <i className='far fa-thumbs-up'></i> {comment.likes_count}
-      </li>
-      {parent === 'Post' &&
-        <li 
-          className='comments-counter'
-          onClick={comment.comments_count > 0 ? showReplies : undefined}>
-          <i className="far fa-comment"></i> {comment.comments_count}
-        </li>}
-      <li className='date'>
-        <ReactTimeAgo date={new Date(comment.created_at)}/>
-      </li>
-    </ul>
-  );
-
-  const optionList = (
-    <div className='buttons'>
-      {currentUserId === comment.user_id &&
-        <button 
-          className='toggle-edit-comment'
-          onClick={() => {setEdit(!edit)}}>
-          <i className={'fas fa-' + (edit ? 'undo' : 'edit')}></i>
-        </button>}
-      {currentUserId === comment.user_id &&
-        <button 
-          className='delete-comment'
-          onClick={handleDeleteComment}>
-          <i className="far fa-trash-alt"></i>
-        </button>}
-      <button 
-        className='like'
-        onClick={() => { comment.like_id ? unlike() : like() }}>
-        <i className={'fas fa-thumbs-up ' + (comment.like_id ? 'liked' : 'unliked')}></i>
-      </button>
     </div>
   );
 
@@ -156,8 +122,21 @@ function Comment(props) {
     <li className="comment">
       <UserDisplay data={comment}/>
       {edit ? commentForm : commentView}
-      {attributeList}
-      {optionList}
+      <AttributeList
+        parent={parent}
+        likesCount={comment.likes_count}
+        commentsCount={comment.comments_count}
+        date={comment.created_at}
+        onShowChildren={handleShowReplies}/>
+      <OptionList
+        entity={'post'}
+        edit={edit}
+        editable={currentUserId === comment.user_id}
+        likeable={comment.like_id}
+        onToggleEdit={handleToggleEdit}
+        onDelete={handleDeleteComment}
+        onLike={handleLike}
+        onUnlike={handleUnlike}/>
       {repliesView && <ul>{replyList}</ul>}
       {comment.commentable_type === 'Post' &&
         <NewComment 
