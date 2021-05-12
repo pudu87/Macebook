@@ -125,6 +125,8 @@ function Post(props) {
       <UserDisplay data={post}/>
       {edit ? postForm : postView}
       <AttributeList
+        id={post.id}
+        entity={'post'}
         likesCount={post.likes_count}
         commentsCount={post.comments_count}
         date={post.created_at}

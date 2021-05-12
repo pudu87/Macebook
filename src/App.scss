@@ -55,6 +55,15 @@ hr {
 .unliked {
   color: #333;
 }
+.overlay {
+  position: fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index: 5;
+  background-color: rgba(0,0,0,.4);
+}
 * {
   // border: 1px solid red;
 }
@@ -305,6 +314,7 @@ hr {
     max-height: 300px;
   }  
   .attributes {
+    position: relative;
     display: flex;
     .likes-counter,
     .comments-counter {
@@ -314,6 +324,27 @@ hr {
       margin-left: auto;
       font-size: 12px;
       font-style: italic;
+    }
+    .likes {
+      position: absolute;
+      z-index: 10;
+      border: 1px solid #000;
+      border-radius: 3px;
+      background-color: #fff;
+      .hide {
+        position: absolute;
+        top: -7px;
+        right: -7px;
+        background-color: #fff;
+      }
+      > div {
+        max-height: 150px;
+        padding: 5px 10px;
+        overflow-y: auto;
+      }
+      li:not(:last-child) {
+        border-bottom: 1px solid gainsboro;
+      }
     }
   }
   > *:not(:first-child):not(:last-child) {

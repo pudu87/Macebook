@@ -123,13 +123,15 @@ function Comment(props) {
       <UserDisplay data={comment}/>
       {edit ? commentForm : commentView}
       <AttributeList
+        id={comment.id}
+        entity={'comment'}
         parent={parent}
         likesCount={comment.likes_count}
         commentsCount={comment.comments_count}
         date={comment.created_at}
         onShowChildren={handleShowReplies}/>
       <OptionList
-        entity={'post'}
+        entity={'comment'}
         edit={edit}
         editable={currentUserId === comment.user_id}
         likeable={comment.like_id}
