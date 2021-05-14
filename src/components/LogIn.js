@@ -60,6 +60,7 @@ function Login(props) {
         </div>
         <input 
           type='submit' 
+          className='button'
           value='Log In'/>
       </form>
       <Link to={'/signup'}>No account yet? Sign up here.</Link>

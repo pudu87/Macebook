@@ -28,7 +28,8 @@ function EditComment(props) {
         </textarea>
         <div>
           <input 
-            type='submit' 
+            type='submit'
+            className='button' 
             value='Edit'
             onClick={handleSubmit}/>
         </div>

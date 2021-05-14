@@ -53,7 +53,11 @@ function Profile(props) {
   const profileView = (
     <div id='profile-view'>
       <table><tbody>{profileList}</tbody></table>
-      <button onClick={changeView}>Change Profile</button>
+      <button 
+        className='button'
+        onClick={changeView}>
+        Change Profile
+      </button>
     </div>
   );
 

@@ -59,6 +59,7 @@ function SignUp() {
         </div>
         <input 
           type='submit' 
+          className='button'
           value='Sign Up'/>
       </form>
       <Link to={'/login'}>Have an account? Log in here.</Link>

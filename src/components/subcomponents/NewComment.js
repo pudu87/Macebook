@@ -32,7 +32,8 @@ function NewComment(props) {
         </textarea>
         <div>
           <input 
-            type='submit' 
+            type='submit'
+            className='button' 
             value={title}/>
         </div>
       </form>

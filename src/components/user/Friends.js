@@ -103,7 +103,11 @@ function Friends(props) {
     return (
       <div className='friend-request'>
         {cat.method ?
-        <button onClick={() => handleRequest(cat.method, id)}>{cat.text}</button> :
+        (<button 
+          className='button'
+          onClick={() => handleRequest(cat.method, id)}>
+          {cat.text}
+        </button>) :
         cat.text}
       </div>
     );

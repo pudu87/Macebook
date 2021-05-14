@@ -48,12 +48,23 @@ function EditProfile(props) {
             id='avatar'
             name='avatar'
             onChange={handleChange}/>
-          <label htmlFor='avatar'>Change</label>
+          <label 
+            className='button'
+            htmlFor='avatar'>
+            Change
+          </label>
           <span>{getPictureName(edit, 'avatar')}</span>
         </div>
-        <input type='submit' value='Confirm Changes'/>
+        <input 
+          type='submit' 
+          className='button'
+          value='Confirm Changes'/>
       </form>
-      <button onClick={() => {props.onChangeView()}}>Back To View</button>
+      <button 
+        className='button'
+        onClick={() => {props.onChangeView()}}>
+        Back To View
+      </button>
     </div>
   );
 }

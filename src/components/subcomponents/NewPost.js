@@ -41,19 +41,23 @@ function NewPost(props) {
           onChange={handleChange}>
         </textarea>
         <div className='file-upload'>
-          <label><i className="far fa-file-image"></i>
+          <label className='icon-button'>
+            <i className="far fa-file-image"></i>
             <input
               type='file'
               name='photo'
               onChange={handleChange}/>
           </label>
-          <button onClick={removePhoto}>
+          <button 
+            className='icon-button'
+            onClick={removePhoto}>
             <i className="far fa-trash-alt"></i>
           </button>
           <span>{post.photo ? post.photo.name : 'No File Selected'}</span>
         </div>
         <input 
           type='submit' 
+          className='button'
           value='Post'
           onClick={handleSubmit}/>
       </form>
