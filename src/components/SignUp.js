@@ -1,18 +1,25 @@
 import { useState } from 'react'
 import { Link } from "react-router-dom"
 import { API_URL } from '../Constants'
+import { fetchApi } from './helpers/Fetching'
 
 function SignUp() {
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [user, setUser] = useState({
+    email: '',
+    password: ''
+  })
+  const [name, setName] = useState({
+    first_name: '',
+    last_name: ''
+  })
 
-  function changeEmail(e) {
-    setEmail(e.target.value);
+  function changeUser(e) {
+    setUser({...user, [e.target.name]: e.target.value});
   }
 
-  function changePassword(e) {
-    setPassword(e.target.value);
+  function changeName(e) {
+    setName({...name, [e.target.name]: e.target.value});
   }
 
   function handleSignup(e) {
@@ -20,7 +27,7 @@ function SignUp() {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user: { email: email, password: password }})
+      body: JSON.stringify({ user, name})
     }
     fetch(API_URL + '/signup', requestOptions)
       .then(response => {
@@ -32,8 +39,16 @@ function SignUp() {
           throw new Error(response)
         }
       })
-      .then(json => console.dir(json))
+      .then(json => {
+        updateProfile(json.data.id)
+        console.dir(json);
+      })
       .catch(err => console.error(err))
+  }
+
+  async function updateProfile(id) {
+    const path = '/profiles/' + id;
+    await fetchApi(path, 'PUT', name);
   }
 
   return (
@@ -45,8 +60,8 @@ function SignUp() {
             type='email' 
             id='email' 
             name='email'
-            value={email} 
-            onChange={changeEmail}/>
+            value={user.email} 
+            onChange={changeUser}/>
         </div>
         <div>
           <label htmlFor='password'>Password:</label>
@@ -54,8 +69,28 @@ function SignUp() {
             type='password' 
             id='password' 
             name='password'
-            value={password} 
-            onChange={changePassword}/>
+            value={user.password} 
+            onChange={changeUser}/>
+        </div>
+        <div>
+          <label htmlFor='firstName'>First Name:</label>
+          <input 
+            type='text' 
+            required
+            id='firstName' 
+            name='first_name'
+            value={name.first_name} 
+            onChange={changeName}/>
+        </div>
+        <div>
+          <label htmlFor='lastName'>Last Name:</label>
+          <input 
+            type='text' 
+            required
+            id='lastName' 
+            name='last_name'
+            value={name.last_name} 
+            onChange={changeName}/>
         </div>
         <input 
           type='submit' 
