@@ -36,10 +36,6 @@ function Profile(props) {
     setView(!view);
   }
 
-  const noFriend = !userStatus.isFriend && 
-    !userStatus.isCurrentUser &&
-    <div>Befriend this user if you want to see more</div>;
-
   const profileList = Object.entries(profile).map(([key, value]) => {
     if (key === 'avatar') return false;
     return (
@@ -53,24 +49,29 @@ function Profile(props) {
   const profileView = (
     <div id='profile-view'>
       <table><tbody>{profileList}</tbody></table>
-      <button 
-        className='button'
-        onClick={changeView}>
-        Change Profile
-      </button>
+      {userStatus.isCurrentUser &&
+        <button 
+          className='button'
+          onClick={changeView}>
+          Change Profile
+        </button>
+      }
     </div>
   );
 
+  const content = view ? 
+    profileView :
+    <EditProfile 
+      profile={profile} 
+      onProfileChange={handleProfileChange}
+      onChangeView={changeView}/>;
+  
+  const noFriendWarning = <div>Befriend this user if you want to see more</div>;
+
   return (
     <div id="profile">
-      {noFriend}
-      {view ? 
-        profileView :
-        <EditProfile 
-          profile={profile} 
-          onProfileChange={handleProfileChange}
-          onChangeView={changeView}/>
-      }
+      {!userStatus.isFriend && !userStatus.isCurrentUser ? 
+        noFriendWarning : content}
     </div>
   );
 }

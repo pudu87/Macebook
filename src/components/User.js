@@ -55,6 +55,7 @@ function User() {
       </div>
     </header>
   );
+
   return (
       <div id="user">
         {headerTag}

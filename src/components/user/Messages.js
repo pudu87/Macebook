@@ -53,7 +53,7 @@ function Messages(props) {
   const newPost = userStatus.isCurrentUser &&
     <NewPost onNewPost={handleNewPost}/>;
 
-  const noFriend = !userStatus.isFriend && !userStatus.isCurrentUser &&
+  const noFriendWarning = !userStatus.isFriend && !userStatus.isCurrentUser &&
     <div>Befriend this user if you want to see more</div>;
 
   const postList = posts.map((post, index) => {
@@ -72,7 +72,7 @@ function Messages(props) {
   return (
     <div id="messages">
       {newPost}
-      {noFriend}
+      {noFriendWarning}
       {postList}
     </div>
   );
