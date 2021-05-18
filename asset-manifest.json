@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/macebook/static/css/main.d499e0c2.chunk.css",
+    "main.js": "/macebook/static/js/main.942bdae9.chunk.js",
+    "main.js.map": "/macebook/static/js/main.942bdae9.chunk.js.map",
+    "runtime-main.js": "/macebook/static/js/runtime-main.f9c80bf4.js",
+    "runtime-main.js.map": "/macebook/static/js/runtime-main.f9c80bf4.js.map",
+    "static/js/2.9cc7fb62.chunk.js": "/macebook/static/js/2.9cc7fb62.chunk.js",
+    "static/js/2.9cc7fb62.chunk.js.map": "/macebook/static/js/2.9cc7fb62.chunk.js.map",
+    "index.html": "/macebook/index.html",
+    "static/css/main.d499e0c2.chunk.css.map": "/macebook/static/css/main.d499e0c2.chunk.css.map",
+    "static/js/2.9cc7fb62.chunk.js.LICENSE.txt": "/macebook/static/js/2.9cc7fb62.chunk.js.LICENSE.txt",
+    "static/media/mace.a93de9a5.png": "/macebook/static/media/mace.a93de9a5.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.f9c80bf4.js",
+    "static/js/2.9cc7fb62.chunk.js",
+    "static/css/main.d499e0c2.chunk.css",
+    "static/js/main.942bdae9.chunk.js"
+  ]
+}
