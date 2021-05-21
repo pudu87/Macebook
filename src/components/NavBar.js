@@ -4,7 +4,7 @@ import Mace from '../images/mace.png'
 
 function NavBar(props) {
 
-  const { userId, hideMenu } = props;
+  const userId = props.userId;
 
   async function handleLogout() {
     const requestOptions = {
@@ -41,16 +41,15 @@ function NavBar(props) {
         {logo}
         <p>a Very Medieval Social Network</p>
       </header>
-      {!hideMenu &&
-        <nav>
-          <div><Link to={'/'}>Home</Link></div>
-          <div><Link to={'/' + userId}>My Page</Link></div>
-          <div>
-            <Link to={'/login'} onClick={handleLogout}>
-              <i className="fas fa-sign-out-alt"></i>
-            </Link>
-          </div>
-        </nav>}
+      <nav>
+        <div><Link to={'/'}>Home</Link></div>
+        <div><Link to={'/' + userId}>My Page</Link></div>
+        <div>
+          <Link to={'/login'} onClick={handleLogout}>
+            <i className="fas fa-sign-out-alt"></i>
+          </Link>
+        </div>
+      </nav>
     </div>
   );
 }
