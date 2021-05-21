@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { Link } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 import { API_URL } from '../Constants'
 import { fetchApi } from './helpers/Fetching'
 
-function SignUp() {
+function SignUp(props) {
 
   const [user, setUser] = useState({
     email: '',
@@ -13,6 +13,7 @@ function SignUp() {
     first_name: '',
     last_name: ''
   })
+  const history = useHistory();
 
   function changeUser(e) {
     setUser({...user, [e.target.name]: e.target.value});
@@ -22,28 +23,29 @@ function SignUp() {
     setName({...name, [e.target.name]: e.target.value});
   }
 
-  function handleSignup(e) {
+  async function handleSignup(e) {
     e.preventDefault();
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ user, name})
     }
-    fetch(API_URL + '/signup', requestOptions)
-      .then(response => {
-        if (response.ok) {
-          console.log(response.headers.get('Authorization'));
-          localStorage.setItem('token', response.headers.get('Authorization'));
-          return response.json();
-        } else {
-          throw new Error(response)
-        }
-      })
-      .then(json => {
-        updateProfile(json.data.id)
+    try {
+      const response = await fetch(API_URL + '/signup', requestOptions);
+      if (response.ok) {
+        console.log(response.headers.get('Authorization'));
+        localStorage.setItem('token', response.headers.get('Authorization'));
+        const json = await response.json();
+        await updateProfile(json.data.id);
+        await props.onSignup();
+        history.push('/');
         console.dir(json);
-      })
-      .catch(err => console.error(err))
+      } else {
+        throw new Error(response)
+      }
+    } catch(err) {
+      console.error(err)
+    }
   }
 
   async function updateProfile(id) {
@@ -102,4 +104,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default SignUp

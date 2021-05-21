@@ -51,7 +51,7 @@ function App() {
             <LogIn onLogin={handleLogin}/>
           </Route>
           <Route path='/signup'>
-            <SignUp/>
+            <SignUp onSignup={handleLogin}/>
           </Route>
           <PrivateRoute 
             exact path='/'
